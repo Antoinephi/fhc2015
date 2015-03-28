@@ -151,5 +151,18 @@ public class ProblemData {
 		Coord2 windVector = this.getWindVector(balloonCoord.x, balloonCoord.y, balloonCoord.z + altitude);
 		return new Coord3((balloonCoord.x + windVector.x) % this.nX, balloonCoord.y + windVector.y, balloonCoord.z + altitude);
 	}
+	
+	public void setTargetCovered(int i, boolean b) {
+		this.targetCovered.put(i, b);
+	}
+	
+	public int getTargetIndex(int i, int j) {
+		for(int k = 0; k < this.nbTarget; k++) {
+			if(this.targetsCase.get(k).equals(new Coord2(i, j))) {
+				return k;
+			}
+		}
+		return -1;
+	}
 
 }

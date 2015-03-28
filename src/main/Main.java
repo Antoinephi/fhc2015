@@ -8,7 +8,7 @@ public class Main {
 		
 		ProblemData data = Input.parse("data/in");
 		
-		Problem problem = new ProblemNaive2(data);
+		Problem problem = new ProblemNaive(data);
 		
 		problem.resolve();
 		

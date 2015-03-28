@@ -7,7 +7,7 @@ public class ProblemNaive extends Problem {
 	}
 
 	public int columnDist(int x, int u) {
-		return min(Math.abs(x - u), Math.abs((x + this.data.getnX()) - u));
+		return Math.min(Math.abs(x - u), Math.abs((x + this.data.getnX()) - u));
 	}
 	
 	/**
@@ -41,21 +41,21 @@ public class ProblemNaive extends Problem {
 	}
 	
 	public void resolve() {
-		for(int t = 0; t < this.data.getNbTurn(); t++) {
+	/*	for(int t = 0; t < this.data.getNbTurn(); t++) {
 			for(int b = 0; b < this.data.getNbBalloon(); b++) {
 				int bestAltitude = 0;
 				int bestAltitudeValue = 0;
 				for(int i = -1; i <= 1; i++) {
-					if(nextTurnResult(this.data.getBalloonsCoord()) > bestAltitudeValue) {
+					if(nextTurnResult(this.data.getBalloonsCoord(i)) > bestAltitudeValue) {
 						bestAltitude = i;
-						bestAltitudeValue = nextTurnResult(this.data.getBalloonsCoord());
+						bestAltitudeValue = nextTurnResult(this.data.getBalloonsCoord(i));
 					}
 					this.data.setAltitudeChanges(t, b, bestAltitude);
 					this.data.setBalloonsCoord(b, 
-							this.data.newBalloonCoord(this.data.getBalloonsCoord(), bestAltitude));
+							this.data.newBalloonCoord(this.data.getBalloonsCoord(i), bestAltitude));
 				}
 			}
-		}
+		}*/
 	}
 
 }

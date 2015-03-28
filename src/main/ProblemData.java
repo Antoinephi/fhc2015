@@ -18,6 +18,8 @@ public class ProblemData {
 	
 	private Coord2[][][] windsVectors;
 	
+	private Coord2 startBalloon;
+	
 	public ProblemData() {
 		targetsCase = new ArrayList<Coord2>();
 	}
@@ -46,6 +48,10 @@ public class ProblemData {
 		this.nbTurn = nbTurn;
 	}
 	
+	public void setStartBalloon(Coord2 coord) {
+		this.startBalloon = coord;
+	}
+	
 	public void addTargetCase(Coord2 coord) {
 		targetsCase.add(coord);
 	}
@@ -62,5 +68,6 @@ public class ProblemData {
 	public int getNbTurn() {
 		return this.nbTurn;
 	}
+
 
 }

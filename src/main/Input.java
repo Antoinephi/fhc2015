@@ -43,7 +43,14 @@ public class Input {
 		
 		sc.close();
 		
-		System.out.println(nbTarget);
+		currentLine = reader.readLine();
+		sc = new Scanner(currentLine);
+		int startBallonX = sc.nextInt();
+		int startBallonY = sc.nextInt();
+		
+		data.setStartBalloon(new Coord2(startBallonX, startBallonY));
+		
+		sc.close();
 		
 		for(int i=0; i<nbTarget; i++) {
 			currentLine = reader.readLine();
@@ -62,9 +69,7 @@ public class Input {
 			for(int j=0; j<nX; j++) {
 				currentLine = reader.readLine();
 				sc = new Scanner(currentLine);
-				
-				System.out.println(currentLine);
-				
+
 				for(int k=0; k<nY; k++) {
 					int x = sc.nextInt();
 					int y = sc.nextInt();

@@ -20,16 +20,17 @@ public class ProblemNaive2 extends Problem {
 			
 			for(int i=0; i<data.getnX(); i++) {
 				for(int j=0; j<data.getnY(); j++) {
-					
-					int score;
-					if((score = computePathScore(i, j, k)) != 0) {
-						List<Integer> path;
-						if((path = findPathTo(i, j, k)) != null) {
-							System.out.println(score);
-							n++;
-						}
-						
+					List<Integer> path;
+					if((path = findPathTo(i, j, k)) != null) {
+						System.out.println(computePathScore(i, j, k, data.getNbTurn()-path.size()));
+						n++;
 					}
+					/*int score;
+					if((score = computePathScore(i, j, k)) != 0) {
+						
+						
+						
+					}*/
 				}
 			}
 			
@@ -206,7 +207,8 @@ public class ProblemNaive2 extends Problem {
 			return -1;
 		
 		// (x - u)^2 + (columndist(y, v))^2 < V^2 => score + 1
-		for(int i = x - this.data.getCoverageRadius(); i <= x + this.data.getCoverageRadius(); i++) {
+		for(int i = (x - this.data.getCoverageRadius()) % this.data.getnX(); 
+				i <= (x + this.data.getCoverageRadius()) % this.data.getnX(); i++) {
 			for(int j = y - (this.data.getCoverageRadius() - columnDist(x, i));
 					j <= y + (this.data.getCoverageRadius() - columnDist(x, i)); j++) {
 				if(this.data.isTarget(i,j))
@@ -216,7 +218,7 @@ public class ProblemNaive2 extends Problem {
 		return score;
 	}
 	
-	public int computePathScore(int begX, int begY, int begZ) {
+	public int computePathScore(int begX, int begY, int begZ, int maxTurn) {
 		int currentX = begX, currentY = begY, currentZ = begZ;
 		
 		int nTurn = 0;
@@ -244,7 +246,7 @@ public class ProblemNaive2 extends Problem {
 			
 			nTurn++;
 			
-			if(nTurn >= this.data.getNbTurn())
+			if(nTurn >= maxTurn)
 				return score;
 		}
 	}

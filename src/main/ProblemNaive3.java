@@ -70,6 +70,7 @@ public class ProblemNaive3 extends Problem {
 						for (int l = 0 ; l < data.getTargetsCase().size() ; l++) {
 							if (passBy(data.getTargetsCase().get(l), path)) {
 								targetScore[l]++;
+								
 							}
 						}
 					}
@@ -97,14 +98,12 @@ public class ProblemNaive3 extends Problem {
 					}
 				}
 			}
-			writer.close();
-		}
-		
-		
-		
-		for(int i=0; i<data.getTargetsCase().size(); i++) {
 			
 		}
+		
+		writer.close();
+		
+	
 		
 		/*Collections.sort(sortedIndex, new Comparator<Coord3>() {
 

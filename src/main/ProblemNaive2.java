@@ -1,5 +1,8 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProblemNaive2 extends Problem {
 
 	public ProblemNaive2(ProblemData data) {
@@ -17,12 +20,17 @@ public class ProblemNaive2 extends Problem {
 			
 			for(int i=0; i<data.getnX(); i++) {
 				for(int j=0; j<data.getnY(); j++) {
-					if(hasCycle(i, j, k)) {
-						if(findPathTo(i, j, k)) {
-							n++;
-						}
-						
+					List<Integer> path;
+					if((path = findPathTo(i, j, k)) != null) {
+						System.out.println(computePathScore(i, j, k, data.getNbTurn()-path.size()));
+						n++;
 					}
+					/*int score;
+					if((score = computePathScore(i, j, k)) != 0) {
+						
+						
+						
+					}*/
 				}
 			}
 			
@@ -78,8 +86,9 @@ public class ProblemNaive2 extends Problem {
 	}
 	
 	
-	public boolean findPathTo(int x, int y, int z) {
+	public List<Integer> findPathTo(int x, int y, int z) {
 		
+		List<Integer> path = new ArrayList<Integer>();
 		
 		int currentX = this.data.getStartBalloon().x, currentY = this.data.getStartBalloon().y, currentZ = 0;
 		
@@ -89,15 +98,16 @@ public class ProblemNaive2 extends Problem {
 		
 		while(true) {
 			
-			if(currentY < 0 || currentY >= data.getnY()) {
-				return false;
-			}
+			float Zratio = 0.75f;
 			
 			//Compute with current 
 			int dCurr = 0;
 			Coord2 cZcurr = computeCoord(currentX, currentY, currentZ);
-			if(cZcurr != null)
+			if(cZcurr != null) {
 				dCurr = getDistance(cZcurr, target);
+				if(z == currentZ)
+					dCurr *= Zratio;
+			}
 			else
 				dCurr = Integer.MAX_VALUE;
 			
@@ -107,8 +117,11 @@ public class ProblemNaive2 extends Problem {
 				dUp = Integer.MAX_VALUE;
 			else {
 				cZup = computeCoord(currentX, currentY, currentZ+1);
-				if(cZup != null)
+				if(cZup != null) {
 					dUp = getDistance(cZup, target);
+					if(z > currentZ)
+						dUp *= Zratio;	
+				}
 				else
 					dUp = Integer.MAX_VALUE;
 			}
@@ -120,30 +133,47 @@ public class ProblemNaive2 extends Problem {
 				dDown = Integer.MAX_VALUE;
 			else {
 				cZdown = computeCoord(currentX, currentY, currentZ-1);
-				if(cZdown != null)
+				if(cZdown != null) {
 					dDown = getDistance(cZdown, target);
+					if(z < currentZ)
+						dDown *= Zratio;		
+				}
 				else
 					dDown = Integer.MAX_VALUE;
 			}
 			
 			//best z
-			if(dCurr <= dUp && dCurr <= dDown) {
+			if(cZcurr != null && dCurr <= dUp && dCurr <= dDown) {
 				currentX = 	cZcurr.x;
 				currentY = cZcurr.y;
+				path.add(new Integer(0));
 			}
-			else if(dUp < dDown) {
+			else if(cZup != null && dUp < dDown) {
 				currentX = 	cZup.x;
 				currentY = cZup.y;
+				currentZ += 1;
+				path.add(new Integer(1));
 			}
-			else {
+			else if(cZdown != null) {
 				currentX = 	cZdown.x;
 				currentY = cZdown.y;
+				currentZ -= 1;
+				path.add(new Integer(-1));
+			}
+			else {
+				return null;
 			}
 			
 			nTurn++;
 			
 			if(nTurn >= this.data.getNbTurn())
-				return true;
+				return null;
+			
+			if(currentX == x && currentY == y && currentZ == z) {
+				return path;
+			}
+			
+			
 		}
 	}
 
@@ -172,5 +202,63 @@ public class ProblemNaive2 extends Problem {
 		return (c1.x-c2.x)*(c1.x-c2.x)+(c1.y-c2.y)*(c1.y-c2.y);
 	}
 	
+	public int columnDist(int x, int u) {
+		return Math.min(Math.abs(x - u), Math.abs((x + this.data.getnX()) - u));
+	}
+	
+	/**
+	 * Return coverage score for the case (x, y)
+	 */
+	public int getScoreBalloon(int x, int y) {
+		int score = 0;
+		
+		// If the balloon is not in the map
+		if(y >= this.data.getnY() || y < 0)
+			return -1;
+		
+		// (x - u)^2 + (columndist(y, v))^2 < V^2 => score + 1
+		for(int i = (x - this.data.getCoverageRadius()) % this.data.getnX(); 
+				i <= (x + this.data.getCoverageRadius()) % this.data.getnX(); i++) {
+			for(int j = y - (this.data.getCoverageRadius() - columnDist(x, i));
+					j <= y + (this.data.getCoverageRadius() - columnDist(x, i)); j++) {
+				if(this.data.isTarget(i,j))
+					score++;
+			}
+		}
+		return score;
+	}
+	
+	public int computePathScore(int begX, int begY, int begZ, int maxTurn) {
+		int currentX = begX, currentY = begY, currentZ = begZ;
+		
+		int nTurn = 0;
+		int score = 0;
+		
+		while(true) {
+			
+			Coord2 c = computeCoord(currentX, currentY, currentZ);
+			
+			if(c == null)
+				return score;
+			else {
+				currentX = c.x;
+				currentY = c.y;
+			}
+			
+			int i = getScoreBalloon(currentX, currentY);
+			
+			if(i == -1) {
+				System.err.println("WTF");
+				System.exit(0);
+			}
+			
+			score += i;
+			
+			nTurn++;
+			
+			if(nTurn >= maxTurn)
+				return score;
+		}
+	}
 
 }

@@ -20,6 +20,12 @@ public abstract class Problem {
 		/*
 		 * OUTPUT HERE
 		 */
+		for (int t = 0 ; t < this.getNbTurn() ; t++) {
+			for (int i = 0 ; i  < this.getNbBalloon() ; i++) {
+				writer.print(this.data.getMove(t, i)+" ");
+			}
+			writer.print("\n");
+		}
 		
 		writer.close();
 		

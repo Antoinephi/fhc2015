@@ -21,8 +21,8 @@ public class Input {
 		
 		Scanner sc = new Scanner(currentLine);
 		
-		int nX = sc.nextInt();
 		int nY = sc.nextInt();
+		int nX = sc.nextInt();
 		int nZ = sc.nextInt();
 		
 		data.setAreaDimension(nX, nY, nZ);
@@ -66,15 +66,15 @@ public class Input {
 		
 		for(int i=0; i<nZ; i++) {
 			
-			for(int j=0; j<nX; j++) {
+			for(int j=0; j<nY; j++) {
 				currentLine = reader.readLine();
 				sc = new Scanner(currentLine);
 
-				for(int k=0; k<nY; k++) {
+				for(int k=0; k<nX; k++) {
 					int y = sc.nextInt();
 					int x = sc.nextInt();
 					
-					data.addWindVector(j, k, i, new Coord2(x, y));
+					data.addWindVector(k, j, i, new Coord2(x, y));
 				}
 				
 				sc.close();

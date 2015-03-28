@@ -63,6 +63,10 @@ public class ProblemData {
 		return this.nbBalloon;
 	}
 	
+	public boolean isTarget(int u, int v){
+		return this.targetsCase.contains(new Coord2(u, v));
+	}
+	
 	public int getNbTurn() {
 		return this.nbTurn;
 	}

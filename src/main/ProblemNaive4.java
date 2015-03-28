@@ -66,6 +66,17 @@ public class ProblemNaive4 extends Problem {
 		List<Coord3> sortedIndex = new ArrayList<Coord3>();
 		List<Coord3> sortedRareIndex = new ArrayList<Coord3>();
 		
+		for(int i=0; i<data.getnX(); i++) {
+			for(int j=0; j<data.getnY(); j++) {
+				for(int k=0; k<data.getnZ(); k++) {
+					if(scoreList[i][j][k] != 0)
+						sortedIndex.add(new Coord3(i, j, k));
+					if(scoreListRare[i][j][k] != 0)
+						sortedRareIndex.add(new Coord3(i, j, k));
+				}
+			}	
+		}
+		
 		Collections.sort(sortedIndex, new Comparator<Coord3>() {
 			public int compare(Coord3 index1, Coord3 index2) {
 				return scoreList[index2.x][index2.y][index2.z]-scoreList[index1.x][index1.y][index1.z];

@@ -33,14 +33,14 @@ public class ProblemNaive extends Problem {
 	}
 	
 
-	/*public void updateTarget(Coord3 balloonsCoord, Coord3 oldBalloonsCoord) {
+	public void updateTarget(Coord3 balloonsCoord, Coord3 oldBalloonsCoord) {
 		
-		for(int i = balloonsCoord.x - this.data.getCoverageRadius(); i <= balloonsCoord.x + this.data.getCoverageRadius(); i++) {
-			for(int j = balloonsCoord.y - (this.data.getCoverageRadius() - columnDist(balloonsCoord.x, i));
-					j <= balloonsCoord.y + (this.data.getCoverageRadius() - columnDist(balloonsCoord.x, i)); j++) {
+		for(int i = oldBalloonsCoord.x - this.data.getCoverageRadius(); i <= oldBalloonsCoord.x + this.data.getCoverageRadius(); i++) {
+			for(int j = oldBalloonsCoord.y - (this.data.getCoverageRadius() - columnDist(oldBalloonsCoord.x, i));
+					j <= oldBalloonsCoord.y + (this.data.getCoverageRadius() - columnDist(oldBalloonsCoord.x, i)); j++) {
 				if(this.data.isTarget(i,j))
-					this.data.setTargetCovered(this.data.getTargetIndex(i, j), true);
-				}
+					this.data.setTargetCovered(this.data.getTargetIndex(i, j), 
+							this.data.isCovered(this.data.getTargetIndex(i, j)) - 1);
 			}
 		}
 		
@@ -52,21 +52,36 @@ public class ProblemNaive extends Problem {
 			for(int j = balloonsCoord.y - (this.data.getCoverageRadius() - columnDist(balloonsCoord.x, i));
 					j <= balloonsCoord.y + (this.data.getCoverageRadius() - columnDist(balloonsCoord.x, i)); j++) {
 				if(this.data.isTarget(i,j))
-					this.data.setTargetCovered(this.data.getTargetIndex(i, j), true);
-				}
+					this.data.setTargetCovered(this.data.getTargetIndex(i, j), 
+							this.data.isCovered(this.data.getTargetIndex(i, j)) + 1);
 			}
 		}
-	}*/
+	}
 	
 	public int nextTurnResult(Coord3 balloonCoord, int altitudeDeviation) {
+		
+		int score = 0;
 		
 		if(balloonCoord.z + altitudeDeviation < 0 || 
 				balloonCoord.z + altitudeDeviation >= 8)
 			return -1;
+
+		/*if(nbTurns > 1) {
+			int bestAltitude = 0;
+			int bestAltitudeValue = 0;
+			for(int i = - 1; i <= 1; i++) {
+				if(nextTurnResult(balloonCoord, i, nbTurns-1) >= bestAltitudeValue) {
+					bestAltitude = i;
+					bestAltitudeValue = nextTurnResult(balloonCoord, i, nbTurns-1);
+				}
+			}	
+			score += bestAltitudeValue;
+		}*/
 		
 		Coord2 windVector = this.data.getWindVector(balloonCoord.x, balloonCoord.y, balloonCoord.z + altitudeDeviation);
-		return getScoreBalloon(balloonCoord.x + windVector.x, 
+		score += getScoreBalloon(balloonCoord.x + windVector.x, 
 				balloonCoord.y + windVector.y);
+		return score;
 	}
 	
 	public void resolve() {
@@ -77,7 +92,7 @@ public class ProblemNaive extends Problem {
 					this.move[t][b] = 1;
 					this.data.setBalloonsCoord(b, 
 							this.data.newBalloonCoord(this.data.getBalloonsCoord(b), 1));
-				} else if(t > b){
+				} else if(t > b) {
 					int bestAltitude = 0;
 					int bestAltitudeValue = 0;
 					for(int i = -1; i <= 1; i++) {
@@ -87,8 +102,8 @@ public class ProblemNaive extends Problem {
 						}
 					}
 					this.move[t][b] = bestAltitude;
-					/*this.updateTarget(this.data.newBalloonCoord(this.data.getBalloonsCoord(b), bestAltitude), 
-							this.data.getBalloonsCoord(b));*/
+					this.updateTarget(this.data.newBalloonCoord(this.data.getBalloonsCoord(b), bestAltitude), 
+							this.data.getBalloonsCoord(b));
 					this.data.setBalloonsCoord(b, 
 							this.data.newBalloonCoord(this.data.getBalloonsCoord(b), bestAltitude));
 				}

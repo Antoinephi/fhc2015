@@ -36,7 +36,9 @@ public class Input {
 		int nbBalloon = sc.nextInt();
 		int nbTurn = sc.nextInt();
 		
-		data.setNbTarget(nbTarget);
+		data.setNbTarget(nbTarget);		
+		data.initTarget();
+		
 		data.setCoverageRadius(coverageRadius);
 		data.setNbBalloon(nbBalloon);
 		data.setNbTurn(nbTurn);

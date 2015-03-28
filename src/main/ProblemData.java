@@ -26,13 +26,10 @@ public class ProblemData {
 	
 	private Coord2 startBalloon;
 	
-	private Map<Integer, Boolean> targetCovered;
+	private Map<Integer, Integer> targetCovered;
 	
 	public ProblemData() {
 		targetsCase = new ArrayList<Coord2>();
-		this.balloonsCoord = new Coord3[nbBalloon];
-		this.altitudeChanges = new int[nbTurn][nbBalloon];
-
 	}
 
 	public void setAreaDimension(int nX, int nY, int nZ) {
@@ -44,11 +41,21 @@ public class ProblemData {
 	}
 	
 	public Coord2 getWindVector(int x, int y, int z) {
+		/*System.out.println("x = " + x);
+		System.out.println("y = " + y);
+		System.out.println("z = " + z);*/
 		return this.windsVectors[x][y][z];
 	}
 
 	public void setNbTarget(int nbTarget) {
 		this.nbTarget = nbTarget;
+	}
+	
+	public void initTarget() {
+		targetCovered = new LinkedHashMap<Integer, Integer>();
+		for(int i = 0; i < nbTarget; i++) {
+			targetCovered.put(i, 0);
+		}
 	}
 
 	public void setNbBalloon(int nbBalloon) {
@@ -151,8 +158,8 @@ public class ProblemData {
 		return new Coord3((balloonCoord.x + windVector.x) % this.nX, balloonCoord.y + windVector.y, balloonCoord.z + altitude);
 	}
 	
-	public void setTargetCovered(int i, boolean b) {
-		this.targetCovered.put(i, b);
+	public void setTargetCovered(int i, int j) {
+		this.targetCovered.put(i, j);
 	}
 	
 	public int getTargetIndex(int i, int j) {
@@ -164,6 +171,10 @@ public class ProblemData {
 		return -1;
 	}
 	
+	public int isCovered(int i) {
+		return this.targetCovered.get(i);
+	}
+		
 	public int columnDist(int x, int u) {
 		return Math.min(Math.abs(x - u), Math.abs((x + getnX()) - u));
 	}

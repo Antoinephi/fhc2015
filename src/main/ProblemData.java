@@ -132,5 +132,10 @@ public class ProblemData {
 	public void setBalloonsCoord(int i , Coord2 coo) {
 		this.balloonsCoord[i] = coo;
 	}	
+	
+	public Coord2 newBallonCoord(Coord2 balloonCoord, int altitude) {
+		Coord2 windVector = this.getWindVector(balloonCoord.x, balloonCoord.y, altitude);
+		return new Coord2(balloonCoord.x + windVector.x, balloonCoord.y + windVector.y);
+	}
 
 }

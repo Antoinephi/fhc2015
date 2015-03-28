@@ -35,6 +35,6 @@ public class ProblemData {
 		this.nbTurn = nbTurn;
 	}
 	
-	public void 
+	public void addTargetCase()
 
 }

@@ -21,7 +21,8 @@ public class ProblemNaive extends Problem {
 			return -1;
 		
 		// (x - u)^2 + (columndist(y, v))^2 < V^2 => score + 1
-		for(int i = x - this.data.getCoverageRadius(); i <= x + this.data.getCoverageRadius(); i++) {
+		for(int i = (x - this.data.getCoverageRadius()) % this.data.getnX(); 
+				i <= (x + this.data.getCoverageRadius()) % this.data.getnX(); i++) {
 			for(int j = y - (this.data.getCoverageRadius() - columnDist(x, i));
 					j <= y + (this.data.getCoverageRadius() - columnDist(x, i)); j++) {
 				if(this.data.isTarget(i,j))
@@ -30,6 +31,32 @@ public class ProblemNaive extends Problem {
 		}
 		return score;
 	}
+	
+
+	/*public void updateTarget(Coord3 balloonsCoord, Coord3 oldBalloonsCoord) {
+		
+		for(int i = balloonsCoord.x - this.data.getCoverageRadius(); i <= balloonsCoord.x + this.data.getCoverageRadius(); i++) {
+			for(int j = balloonsCoord.y - (this.data.getCoverageRadius() - columnDist(balloonsCoord.x, i));
+					j <= balloonsCoord.y + (this.data.getCoverageRadius() - columnDist(balloonsCoord.x, i)); j++) {
+				if(this.data.isTarget(i,j))
+					this.data.setTargetCovered(this.data.getTargetIndex(i, j), true);
+				}
+			}
+		}
+		
+		// If the balloon is not in the map
+		if(balloonsCoord.y >= this.data.getnY() || balloonsCoord.y < 0)
+			return;
+		
+		for(int i = balloonsCoord.x - this.data.getCoverageRadius(); i <= balloonsCoord.x + this.data.getCoverageRadius(); i++) {
+			for(int j = balloonsCoord.y - (this.data.getCoverageRadius() - columnDist(balloonsCoord.x, i));
+					j <= balloonsCoord.y + (this.data.getCoverageRadius() - columnDist(balloonsCoord.x, i)); j++) {
+				if(this.data.isTarget(i,j))
+					this.data.setTargetCovered(this.data.getTargetIndex(i, j), true);
+				}
+			}
+		}
+	}*/
 	
 	public int nextTurnResult(Coord3 balloonCoord, int altitudeDeviation) {
 		
@@ -60,6 +87,8 @@ public class ProblemNaive extends Problem {
 						}
 					}
 					this.move[t][b] = bestAltitude;
+					/*this.updateTarget(this.data.newBalloonCoord(this.data.getBalloonsCoord(b), bestAltitude), 
+							this.data.getBalloonsCoord(b));*/
 					this.data.setBalloonsCoord(b, 
 							this.data.newBalloonCoord(this.data.getBalloonsCoord(b), bestAltitude));
 				}

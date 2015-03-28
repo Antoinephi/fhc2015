@@ -35,6 +35,8 @@ public class ProblemNaive2 extends Problem {
 		
 		int nTurn = 0;
 		
+		int score = 0;
+		
 		while(true) {
 			
 			if(currentY < 0 || currentY >= data.getnY()) {
@@ -48,6 +50,7 @@ public class ProblemNaive2 extends Problem {
 			if(currentX < 0) {
 				currentX = data.getnX()+currentX;
 			}
+			
 			else if(currentX >= data.getnX()) {
 				currentX = currentX-data.getnX();
 			}
@@ -56,14 +59,21 @@ public class ProblemNaive2 extends Problem {
 			
 			currentY += data.getWindVector(currentX, currentY, currentZ).y;
 			
+			score += this.data.getScoreBalloon(currentX,currentY)!=-1?this.data.getScoreBalloon(currentX,currentY):0;
+					 
 			if(currentX == x && currentY == y && currentZ == z) {
+				if (score > 0)
+					System.out.println(score+" in "+nTurn+ " turns");
 				return true;
 			}
 			
 			nTurn++;
 			
-			if(nTurn >= this.data.getNbTurn())
+			if(nTurn >= this.data.getNbTurn()) {
+				if (score > 0)
+					System.out.println(score+" in "+nTurn+ " turns");
 				return true;
+			}
 		}
 	}
 	

@@ -31,6 +31,10 @@ public class ProblemData {
 		
 		windsVectors = new Coord2[nX][nY][nZ];
 	}
+	
+	public Coord2 getWindVector(int x, int y, int z) {
+		return this.windsVectors[x][y][z];
+	}
 
 	public void setNbTarget(int nbTarget) {
 		this.nbTarget = nbTarget;
@@ -65,9 +69,12 @@ public class ProblemData {
 		return this.nbBalloon;
 	}
 	
+	public boolean isTarget(int u, int v){
+		return this.targetsCase.contains(new Coord2(u, v));
+	}
+	
 	public int getNbTurn() {
 		return this.nbTurn;
 	}
-
 
 }

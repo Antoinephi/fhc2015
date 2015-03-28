@@ -45,8 +45,8 @@ public class Input {
 		
 		currentLine = reader.readLine();
 		sc = new Scanner(currentLine);
-		int startBallonX = sc.nextInt();
 		int startBallonY = sc.nextInt();
+		int startBallonX = sc.nextInt();
 		
 		data.setStartBalloon(new Coord2(startBallonX, startBallonY));
 		
@@ -56,8 +56,8 @@ public class Input {
 			currentLine = reader.readLine();
 			sc = new Scanner(currentLine);
 			
-			int x = sc.nextInt();
 			int y = sc.nextInt();
+			int x = sc.nextInt();
 			
 			data.addTargetCase(new Coord2(x, y));
 			
@@ -71,8 +71,8 @@ public class Input {
 				sc = new Scanner(currentLine);
 
 				for(int k=0; k<nY; k++) {
-					int x = sc.nextInt();
 					int y = sc.nextInt();
+					int x = sc.nextInt();
 					
 					data.addWindVector(j, k, i, new Coord2(x, y));
 				}

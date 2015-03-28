@@ -105,5 +105,10 @@ public class ProblemData {
 	public void setnZ(int nZ) {
 		this.nZ = nZ;
 	}	
+	
+	public Coord2 newBallonCoord(Coord2 balloonCoord, int altitude) {
+		Coord2 windVector = this.getWindVector(balloonCoord.x, balloonCoord.y, altitude);
+		return new Coord2(balloonCoord.x + windVector.x, balloonCoord.y + windVector.y);
+	}
 
 }

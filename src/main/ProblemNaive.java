@@ -25,7 +25,7 @@ public class ProblemNaive extends Problem {
 				i <= (x + this.data.getCoverageRadius()) % this.data.getnX(); i++) {
 			for(int j = y - (this.data.getCoverageRadius() - columnDist(x, i));
 					j <= y + (this.data.getCoverageRadius() - columnDist(x, i)); j++) {
-				if(this.data.isTarget(i,j))
+				if(this.data.isTarget(i,j) && this.data.isCovered(this.data.getTargetIndex(i, j)) == 0)
 					score++;
 			}
 		}
@@ -58,7 +58,7 @@ public class ProblemNaive extends Problem {
 		}
 	}
 	
-	public int nextTurnResult(Coord3 balloonCoord, int altitudeDeviation) {
+	public int nextTurnResult(Coord3 balloonCoord, int altitudeDeviation, int nbTurns) {
 		
 		int score = 0;
 		
@@ -66,19 +66,20 @@ public class ProblemNaive extends Problem {
 				balloonCoord.z + altitudeDeviation >= 8)
 			return -1;
 
-		/*if(nbTurns > 1) {
+		Coord2 windVector = this.data.getWindVector(balloonCoord.x, balloonCoord.y, balloonCoord.z + altitudeDeviation);
+		
+		if(nbTurns > 1) {
 			int bestAltitude = 0;
 			int bestAltitudeValue = 0;
 			for(int i = - 1; i <= 1; i++) {
-				if(nextTurnResult(balloonCoord, i, nbTurns-1) >= bestAltitudeValue) {
+				if(nextTurnResult(new Coord3((balloonCoord.x + windVector.x) % this.data.getnX(), balloonCoord.y + windVector.y, balloonCoord.z + altitudeDeviation), i, nbTurns-1) >= bestAltitudeValue) {
 					bestAltitude = i;
 					bestAltitudeValue = nextTurnResult(balloonCoord, i, nbTurns-1);
 				}
 			}	
 			score += bestAltitudeValue;
-		}*/
+		}
 		
-		Coord2 windVector = this.data.getWindVector(balloonCoord.x, balloonCoord.y, balloonCoord.z + altitudeDeviation);
 		score += getScoreBalloon(balloonCoord.x + windVector.x, 
 				balloonCoord.y + windVector.y);
 		return score;
@@ -94,11 +95,11 @@ public class ProblemNaive extends Problem {
 							this.data.newBalloonCoord(this.data.getBalloonsCoord(b), 1));
 				} else if(t > b) {
 					int bestAltitude = 0;
-					int bestAltitudeValue = 0;
+					int bestAltitudeValue = -1;
 					for(int i = -1; i <= 1; i++) {
-						if(nextTurnResult(this.data.getBalloonsCoord(b), i) >= bestAltitudeValue) {
+						if(nextTurnResult(this.data.getBalloonsCoord(b), i, 1) >= bestAltitudeValue) {
 							bestAltitude = i;
-							bestAltitudeValue = nextTurnResult(this.data.getBalloonsCoord(b), i);
+							bestAltitudeValue = nextTurnResult(this.data.getBalloonsCoord(b), i, 1);
 						}
 					}
 					this.move[t][b] = bestAltitude;

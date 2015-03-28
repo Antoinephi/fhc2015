@@ -14,7 +14,7 @@ public class Main {
 		
 		System.out.println("phase 2");
 		
-		Problem problem2 = new ProblemNaive2(data);
+		Problem problem2 = new ProblemNaive3(data);
 		
 		problem2.resolve();
 		

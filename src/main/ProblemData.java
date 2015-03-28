@@ -18,7 +18,7 @@ public class ProblemData {
 	
 	private Coord2[][][] windsVectors;
 	
-	private Coord2[] balloonsCoord;
+	private Coord3[] balloonsCoord;
 	// [] = tour, [][] = balloon
 	private int[][] altitudeChanges;
 	
@@ -26,10 +26,12 @@ public class ProblemData {
 	
 	public ProblemData() {
 		targetsCase = new ArrayList<Coord2>();
-		this.balloonsCoord = new Coord2[nbBalloon];
+		this.balloonsCoord = new Coord3[nbBalloon];
 		this.altitudeChanges = new int[nbTurn][nbBalloon];
 		for(int i = 0; i < balloonsCoord.length; i++){
-			this.balloonsCoord[i] = this.startBalloon;
+			this.balloonsCoord[i].x = this.startBalloon.x;
+			this.balloonsCoord[i].y = this.startBalloon.y;
+			this.balloonsCoord[i].z = 0;
 		}
 	}
 

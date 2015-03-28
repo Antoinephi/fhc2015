@@ -65,6 +65,27 @@ public class ProblemNaive3 extends Problem {
 			}
 		});
 		
+		List<List<Integer>> listPath = new ArrayList<List<Integer>>();
+		
+		for(int i=0; i<data.getNbBalloon(); i++) {
+			Coord3 c = sortedIndex.get(i);
+			listPath.add(findPathTo(c.x, c.y, c.z));
+			System.out.println(c.x+" "+c.y+" "+c.z);
+		}
+		
+		int tempo = 1;
+		
+		for(int t=0; t<data.getNbTurn(); t++) {
+			for(int i=0; i<data.getNbBalloon(); i++) {
+				if(t >= listPath.get(i).size() || t-tempo*i < 0)
+					this.move[t][i] = 0;
+				else
+					this.move[t][i] = listPath.get(i).get(t-tempo*i);
+				
+			}
+		}
+
+		
 		
 		
 		

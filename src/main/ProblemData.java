@@ -18,10 +18,21 @@ public class ProblemData {
 	
 	private Coord2[][][] windsVectors;
 	
+	private Coord3[] balloonsCoord;
+	// [] = tour, [][] = balloon
+	private int[][] altitudeChanges;
+	
 	private Coord2 startBalloon;
 	
 	public ProblemData() {
 		targetsCase = new ArrayList<Coord2>();
+		this.balloonsCoord = new Coord3[nbBalloon];
+		this.altitudeChanges = new int[nbTurn][nbBalloon];
+		for(int i = 0; i < balloonsCoord.length; i++){
+			this.balloonsCoord[i].x = this.startBalloon.x;
+			this.balloonsCoord[i].y = this.startBalloon.y;
+			this.balloonsCoord[i].z = 0;
+		}
 	}
 
 	public void setAreaDimension(int nX, int nY, int nZ) {
@@ -104,10 +115,31 @@ public class ProblemData {
 
 	public void setnZ(int nZ) {
 		this.nZ = nZ;
+	}
+
+	public int getAltitudeChanges(int i, int j) {
+		return altitudeChanges[i][j];
+	}
+
+	public void setAltitudeChanges(int i, int j, int direction) {
+		this.altitudeChanges[i][j] = direction;
+	}
+
+	public Coord3 getBalloonsCoord(int i) {
+		return balloonsCoord[i];
+	}
+
+	public void setBalloonsCoord(int i , Coord3 coo) {
+		this.balloonsCoord[i] = coo;
 	}	
 	
 	public Coord2 getStartBalloon() {
 		return this.startBalloon;
+	}
+	
+	public Coord2 newBallonCoord(Coord2 balloonCoord, int altitude) {
+		Coord2 windVector = this.getWindVector(balloonCoord.x, balloonCoord.y, altitude);
+		return new Coord2(balloonCoord.x + windVector.x, balloonCoord.y + windVector.y);
 	}
 
 }

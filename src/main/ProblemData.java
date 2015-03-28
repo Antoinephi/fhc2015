@@ -40,10 +40,6 @@ public class ProblemData {
 		this.nbTarget = nbTarget;
 	}
 
-	public void setCoverageRaius(int coverageRadius) {
-		this.coverageRadius = coverageRadius;
-	}
-
 	public void setNbBalloon(int nbBalloon) {
 		this.nbBalloon = nbBalloon;
 	}
@@ -76,5 +72,14 @@ public class ProblemData {
 	public int getNbTurn() {
 		return this.nbTurn;
 	}
+
+
+	public int getCoverageRadius() {
+		return coverageRadius;
+	}
+
+	public void setCoverageRadius(int coverageRadius) {
+		this.coverageRadius = coverageRadius;
+	}	
 
 }

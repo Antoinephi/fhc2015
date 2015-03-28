@@ -1,12 +1,12 @@
 package main;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 
 public class Input {
 	
-	static public ProblemData parse(String pathname) throws FileNotFoundException {
+	static public ProblemData parse(String pathname) throws IOException {
 		
 		ProblemData data = new ProblemData();
 		

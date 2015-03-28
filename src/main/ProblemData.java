@@ -30,12 +30,6 @@ public class ProblemData {
 	
 	public ProblemData() {
 		targetsCase = new ArrayList<Coord2>();
-<<<<<<< HEAD
-=======
-		this.balloonsCoord = new Coord3[nbBalloon];
-		this.altitudeChanges = new int[nbTurn][nbBalloon];
-
->>>>>>> f7cf07345555b96a5960add5b35a829d43a2cfc3
 	}
 
 	public void setAreaDimension(int nX, int nY, int nZ) {

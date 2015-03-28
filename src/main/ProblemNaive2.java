@@ -20,10 +20,12 @@ public class ProblemNaive2 extends Problem {
 			
 			for(int i=0; i<data.getnX(); i++) {
 				for(int j=0; j<data.getnY(); j++) {
-					if(hasCycle(i, j, k)) {
+					
+					int score;
+					if((score = computePathScore(i, j, k)) != 0) {
 						List<Integer> path;
 						if((path = findPathTo(i, j, k)) != null) {
-							//System.out.println(path.size());
+							System.out.println(score);
 							n++;
 						}
 						
@@ -189,5 +191,62 @@ public class ProblemNaive2 extends Problem {
 		return (c1.x-c2.x)*(c1.x-c2.x)+(c1.y-c2.y)*(c1.y-c2.y);
 	}
 	
+	public int columnDist(int x, int u) {
+		return Math.min(Math.abs(x - u), Math.abs((x + this.data.getnX()) - u));
+	}
+	
+	/**
+	 * Return coverage score for the case (x, y)
+	 */
+	public int getScoreBalloon(int x, int y) {
+		int score = 0;
+		
+		// If the balloon is not in the map
+		if(y >= this.data.getnY() || y < 0)
+			return -1;
+		
+		// (x - u)^2 + (columndist(y, v))^2 < V^2 => score + 1
+		for(int i = x - this.data.getCoverageRadius(); i <= x + this.data.getCoverageRadius(); i++) {
+			for(int j = y - (this.data.getCoverageRadius() - columnDist(x, i));
+					j <= y + (this.data.getCoverageRadius() - columnDist(x, i)); j++) {
+				if(this.data.isTarget(i,j))
+					score++;
+			}
+		}
+		return score;
+	}
+	
+	public int computePathScore(int begX, int begY, int begZ) {
+		int currentX = begX, currentY = begY, currentZ = begZ;
+		
+		int nTurn = 0;
+		int score = 0;
+		
+		while(true) {
+			
+			Coord2 c = computeCoord(currentX, currentY, currentZ);
+			
+			if(c == null)
+				return score;
+			else {
+				currentX = c.x;
+				currentY = c.y;
+			}
+			
+			int i = getScoreBalloon(currentX, currentY);
+			
+			if(i == -1) {
+				System.err.println("WTF");
+				System.exit(0);
+			}
+			
+			score += i;
+			
+			nTurn++;
+			
+			if(nTurn >= this.data.getNbTurn())
+				return score;
+		}
+	}
 
 }

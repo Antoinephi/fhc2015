@@ -30,10 +30,9 @@ public class ProblemData {
 	
 	public ProblemData() {
 		targetsCase = new ArrayList<Coord2>();
-		targetCovered = new LinkedHashMap<Integer, Boolean>();
-		for(int i = 0; i < nbTarget; i++) {
-			targetCovered.put(i, false);
-		}
+		this.balloonsCoord = new Coord3[nbBalloon];
+		this.altitudeChanges = new int[nbTurn][nbBalloon];
+
 	}
 
 	public void setAreaDimension(int nX, int nY, int nZ) {

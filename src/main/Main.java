@@ -8,11 +8,17 @@ public class Main {
 		
 		ProblemData data = Input.parse("data/in");
 		
-		Problem problem = new ProblemNaive(data);
+		//Problem problem = new ProblemNaive(data);
 		
-		problem.resolve();
+		//problem.resolve();
 		
-		problem.output("data/out");
+		System.out.println("phase 2");
+		
+		Problem problem2 = new ProblemNaive2(data);
+		
+		problem2.resolve();
+		
+		problem2.output("data/out");
 	}
 
 }

@@ -1,7 +1,9 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProblemData {
 	
@@ -24,15 +26,13 @@ public class ProblemData {
 	
 	private Coord2 startBalloon;
 	
+	private Map<Integer, Boolean> targetCovered;
+	
 	public ProblemData() {
 		targetsCase = new ArrayList<Coord2>();
 		this.balloonsCoord = new Coord3[nbBalloon];
 		this.altitudeChanges = new int[nbTurn][nbBalloon];
-		for(int i = 0; i < nbBalloon; i++){
-			this.balloonsCoord[i].x = this.startBalloon.x;
-			this.balloonsCoord[i].y = this.startBalloon.y;
-			this.balloonsCoord[i].z = 0;
-		}
+
 	}
 
 	public void setAreaDimension(int nX, int nY, int nZ) {
@@ -54,13 +54,22 @@ public class ProblemData {
 	public void setNbBalloon(int nbBalloon) {
 		this.nbBalloon = nbBalloon;
 	}
-
+	
 	public void setNbTurn(int nbTurn) {
 		this.nbTurn = nbTurn;
 	}
 	
 	public void setStartBalloon(Coord2 coord) {
 		this.startBalloon = coord;
+	}
+	
+	public void initBalloonsCoord() {
+		this.balloonsCoord = new Coord3[nbBalloon];
+		this.altitudeChanges = new int[nbTurn][nbBalloon];
+		for(int i = 0; i < nbBalloon; i++){
+			this.balloonsCoord[i] = new Coord3(this.startBalloon.x, 
+					this.startBalloon.y, -1);
+		}
 	}
 	
 	public void addTargetCase(Coord2 coord) {
@@ -137,9 +146,44 @@ public class ProblemData {
 		return this.startBalloon; 
 	}
 	
-	public Coord2 newBallonCoord(Coord2 balloonCoord, int altitude) {
-		Coord2 windVector = this.getWindVector(balloonCoord.x, balloonCoord.y, altitude);
-		return new Coord2(balloonCoord.x + windVector.x, balloonCoord.y + windVector.y);
+	public Coord3 newBalloonCoord(Coord3 balloonCoord, int altitude) {
+		Coord2 windVector = this.getWindVector(balloonCoord.x, balloonCoord.y, balloonCoord.z + altitude);
+		return new Coord3((balloonCoord.x + windVector.x) % this.nX, balloonCoord.y + windVector.y, balloonCoord.z + altitude);
+	}
+	
+	public void setTargetCovered(int i, boolean b) {
+		this.targetCovered.put(i, b);
+	}
+	
+	public int getTargetIndex(int i, int j) {
+		for(int k = 0; k < this.nbTarget; k++) {
+			if(this.targetsCase.get(k).equals(new Coord2(i, j))) {
+				return k;
+			}
+		}
+		return -1;
+	}
+	
+	public int columnDist(int x, int u) {
+		return Math.min(Math.abs(x - u), Math.abs((x + getnX()) - u));
+	}
+
+	public int getScoreBalloon(int x, int y) {
+		int score = 0;
+		
+		// If the balloon is not in the map
+		if(x >= getnY() || y < 0)
+			return -1;
+		
+		// (x - u)^2 + (columndist(y, v))^2 < V^2 => score + 1
+		for(int i = x - this.coverageRadius ; i <= x + this.coverageRadius ; i++) {
+			for(int j = y - (getCoverageRadius() - columnDist(x, i));
+					j <= y + (getCoverageRadius() - columnDist(x, i)); j++) {
+				if(isTarget(i,j))
+					score++;
+			}
+		}
+		return score;
 	}
 
 }

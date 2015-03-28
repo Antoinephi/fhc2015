@@ -131,9 +131,9 @@ public class ProblemData {
 		this.balloonsCoord[i] = coo;
 	}	
 	
-	public Coord2 newBallonCoord(Coord2 balloonCoord, int altitude) {
+	public Coord3 newBallonCoord(Coord3 balloonCoord, int altitude) {
 		Coord2 windVector = this.getWindVector(balloonCoord.x, balloonCoord.y, altitude);
-		return new Coord2(balloonCoord.x + windVector.x, balloonCoord.y + windVector.y);
+		return new Coord3(balloonCoord.x + windVector.x, balloonCoord.y + windVector.y, balloonCoord.z + altitude);
 	}
 
 }

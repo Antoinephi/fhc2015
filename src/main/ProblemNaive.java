@@ -31,13 +31,15 @@ public class ProblemNaive extends Problem {
 		return score;
 	}
 	
-	public int nextTurnResult(int x, int y, int z, int altitudeDeviation) {
+	public int nextTurnResult(Coord3 balloonCoord, int altitudeDeviation) {
 		
-		if(z + altitudeDeviation <= 0 || z + altitudeDeviation >= 8)
+		if(balloonCoord.z + altitudeDeviation <= 0 || 
+				balloonCoord.z + altitudeDeviation >= 8)
 			return -1;
 		
-		Coord2 windVector = this.data.getWindVector(x, y, z);
-		return getScoreBalloon(x + windVector.x, y + windVector.y);
+		Coord2 windVector = this.data.getWindVector(balloonCoord.x, balloonCoord.y, balloonCoord.z);
+		return getScoreBalloon(balloonCoord.x + windVector.x, 
+				balloonCoord.y + windVector.y);
 	}
 	
 	public void resolve() {
@@ -46,13 +48,13 @@ public class ProblemNaive extends Problem {
 				int bestAltitude = 0;
 				int bestAltitudeValue = 0;
 				for(int i = -1; i <= 1; i++) {
-					if(nextTurnResult(this.data.getBalloonsCoord()) > bestAltitudeValue) {
+					if(nextTurnResult(this.data.getBalloonsCoord(b)) > bestAltitudeValue) {
 						bestAltitude = i;
-						bestAltitudeValue = nextTurnResult(this.data.getBalloonsCoord());
+						bestAltitudeValue = nextTurnResult(this.data.getBalloonsCoord(b));
 					}
 					this.data.setAltitudeChanges(t, b, bestAltitude);
 					this.data.setBalloonsCoord(b, 
-							this.data.newBalloonCoord(this.data.getBalloonsCoord(), bestAltitude));
+							this.data.newBalloonCoord(this.data.getBalloonsCoord(b), bestAltitude));
 				}
 			}
 		}

@@ -23,8 +23,10 @@ public class ProblemNaive2 extends Problem {
 					List<Integer> path;
 					if((path = findPathTo(i, j, k)) != null) {
 						System.out.println(computePathScore(i, j, k, data.getNbTurn()-path.size()));
+						//System.out.println(getScorePath(path));
 						n++;
 					}
+					
 					/*int score;
 					if((score = computePathScore(i, j, k)) != 0) {
 						
@@ -37,6 +39,21 @@ public class ProblemNaive2 extends Problem {
 			System.out.println(k+" => "+n);
 		}
 	}
+
+	
+	public int getScorePath(List<Integer> paths) {
+		int score = 0, currentZ = -1;
+		Coord2 nextCoord = new Coord2(0,0);
+		for (Integer move : paths) {
+			currentZ += move.intValue();
+			nextCoord = computeCoord(nextCoord.x, nextCoord.y, currentZ);
+			if (nextCoord != null)
+				score += getScoreBalloon(nextCoord.x, nextCoord.y);
+		}
+		return score;
+	}
+	
+	
 
 	public boolean hasCycle(int x, int y, int z) {
 		int currentX = x, currentY = y, currentZ = z;
@@ -90,7 +107,11 @@ public class ProblemNaive2 extends Problem {
 		
 		List<Integer> path = new ArrayList<Integer>();
 		
-		int currentX = this.data.getStartBalloon().x, currentY = this.data.getStartBalloon().y, currentZ = 0;
+		path.add(new Integer(1));
+
+		Coord2 beg = this.computeCoord(this.data.getStartBalloon().x, this.data.getStartBalloon().y, 0);
+		
+		int currentX =  beg.x, currentY =  beg.y, currentZ = 0;
 		
 		int nTurn = 0;
 		

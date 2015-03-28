@@ -18,6 +18,10 @@ public class ProblemData {
 	
 	private Coord2[][][] windsVectors;
 	
+	private Coord2[] balloonsCoord;
+	// [] = tour, [][] = balloon
+	private int[][] altitudeChanges;
+	
 	private Coord2 startBalloon;
 	
 	public ProblemData() {
@@ -104,6 +108,22 @@ public class ProblemData {
 
 	public void setnZ(int nZ) {
 		this.nZ = nZ;
+	}
+
+	public int[][] getAltitudeChanges() {
+		return altitudeChanges;
+	}
+
+	public void setAltitudeChanges(int[][] altitudeChanges) {
+		this.altitudeChanges = altitudeChanges;
+	}
+
+	public Coord2[] getBalloonsCoord() {
+		return balloonsCoord;
+	}
+
+	public void setBalloonsCoord(Coord2[] balloonsCoord) {
+		this.balloonsCoord = balloonsCoord;
 	}	
 
 }

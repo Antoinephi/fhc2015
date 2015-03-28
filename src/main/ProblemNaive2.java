@@ -1,5 +1,8 @@
 package main;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,14 @@ public class ProblemNaive2 extends Problem {
 	public void resolve() {
 		System.out.println("Launch problem naive 2");
 		
-		System.out.println(">"+hasCycle(0, 0, 0));
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(new File("data/scoreList"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		
 		
 		for(int k=0; k<data.getnZ(); k++) {
 		
@@ -22,7 +32,10 @@ public class ProblemNaive2 extends Problem {
 				for(int j=0; j<data.getnY(); j++) {
 					List<Integer> path;
 					if((path = findPathTo(i, j, k)) != null) {
-						System.out.println(getScorePath(path) + " : "+ computePathScore(i, j, k, data.getNbTurn()-path.size()));
+						int score = computePathScore(i, j, k, data.getNbTurn()-path.size());
+						int score2 = getScorePath(path);
+						System.out.println(score2+" + "+score);
+						writer.println(i+" "+j+" "+k+" "+score+score2);
 						n++;
 					}
 				}
@@ -30,6 +43,8 @@ public class ProblemNaive2 extends Problem {
 			
 			System.out.println(k+" => "+n);
 		}
+		
+		writer.close();
 	}
 
 	
@@ -46,7 +61,7 @@ public class ProblemNaive2 extends Problem {
 	}
 	
 	
-
+/*
 	public boolean hasCycle(int x, int y, int z) {
 		int currentX = x, currentY = y, currentZ = z;
 		
@@ -93,7 +108,7 @@ public class ProblemNaive2 extends Problem {
 			}
 		}
 	}
-	
+	*/
 	
 	public List<Integer> findPathTo(int x, int y, int z) {
 		

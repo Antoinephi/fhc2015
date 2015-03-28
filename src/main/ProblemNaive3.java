@@ -90,9 +90,9 @@ public class ProblemNaive3 extends Problem {
 			for(int j=0; j<data.getnY(); j++) {
 				for(int k=0; k<data.getnZ(); k++) {
 					if (scoreList[i][j][k] != 0) {
-						System.out.println(i+" "+j+" "+k);
 						List<Integer> path = findPathTo(i, j, k);
 						scoreRareByPath[i][j][k] = this.getScoreRare(path, targetScore);
+						System.out.println(i+" "+j+" "+k+" "+scoreRareByPath[i][j][k]);
 						writer.println(i+" "+j+" "+k+" "+scoreRareByPath[i][j][k]);
 					}
 				}

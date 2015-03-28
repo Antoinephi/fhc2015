@@ -83,7 +83,11 @@ public class Input {
 			}
 		}
 		
+		System.out.println("INPUT");
+		
 		reader.close();
+		
+		System.out.println("Read input done");
 		
 		return data;
 	}

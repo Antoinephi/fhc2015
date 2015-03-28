@@ -44,5 +44,5 @@ public class ProblemData {
 	public int getNbTurn() {
 		return this.nbTurn;
 	}
-
+	
 }

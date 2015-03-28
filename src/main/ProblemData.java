@@ -54,4 +54,13 @@ public class ProblemData {
 		windsVectors[x][y][z] = vector;
 	}
 
+	
+	public int getNbBalloon() {
+		return this.nbBalloon;
+	}
+	
+	public int getNbTurn() {
+		return this.nbTurn;
+	}
+
 }

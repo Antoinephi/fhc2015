@@ -28,7 +28,7 @@ public class ProblemData {
 		targetsCase = new ArrayList<Coord2>();
 		this.balloonsCoord = new Coord3[nbBalloon];
 		this.altitudeChanges = new int[nbTurn][nbBalloon];
-		for(int i = 0; i < balloonsCoord.length; i++){
+		for(int i = 0; i < nbBalloon; i++){
 			this.balloonsCoord[i].x = this.startBalloon.x;
 			this.balloonsCoord[i].y = this.startBalloon.y;
 			this.balloonsCoord[i].z = 0;
@@ -125,11 +125,11 @@ public class ProblemData {
 		this.altitudeChanges[i][j] = direction;
 	}
 
-	public Coord2 getBalloonsCoord(int i) {
+	public Coord3 getBalloonsCoord(int i) {
 		return balloonsCoord[i];
 	}
 
-	public void setBalloonsCoord(int i , Coord2 coo) {
+	public void setBalloonsCoord(int i , Coord3 coo) {
 		this.balloonsCoord[i] = coo;
 	}	
 	

@@ -9,5 +9,9 @@ public class Coord2 {
 		this.x = x;
 		this.y = y;
 	}
+	
+	public boolean equals(Object o){
+		return this.x == ((Coord2) o).x && this.y == ((Coord2) o).y;
+	}
 
 }

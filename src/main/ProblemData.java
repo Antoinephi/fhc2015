@@ -185,5 +185,23 @@ public class ProblemData {
 		}
 		return score;
 	}
+	
+	public List<Coord2> getTargetsCase() {
+		return targetsCase;
+	}
+	
+	public boolean isInCoverageRadius(Coord2 target, Coord2 balloon) {
+		for(int i = balloon.x - this.coverageRadius ; i <= balloon.x + this.coverageRadius ; i++) {
+			for(int j = balloon.y - (getCoverageRadius() - columnDist(balloon.x, i));
+					j <= balloon.y + (getCoverageRadius() - columnDist(balloon.x, i)); j++) {
+				if (target.x == i && target.y == j) {
+					return true;
+				}
+				
+			}
+		}
+		return false;
+	}
+	
 
 }

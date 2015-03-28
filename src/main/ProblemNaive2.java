@@ -1,5 +1,8 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProblemNaive2 extends Problem {
 
 	public ProblemNaive2(ProblemData data) {
@@ -18,7 +21,9 @@ public class ProblemNaive2 extends Problem {
 			for(int i=0; i<data.getnX(); i++) {
 				for(int j=0; j<data.getnY(); j++) {
 					if(hasCycle(i, j, k)) {
-						if(findPathTo(i, j, k)) {
+						List<Integer> path;
+						if((path = findPathTo(i, j, k)) != null) {
+							//System.out.println(path.size());
 							n++;
 						}
 						
@@ -68,8 +73,9 @@ public class ProblemNaive2 extends Problem {
 	}
 	
 	
-	public boolean findPathTo(int x, int y, int z) {
+	public List<Integer> findPathTo(int x, int y, int z) {
 		
+		List<Integer> path = new ArrayList<Integer>();
 		
 		int currentX = this.data.getStartBalloon().x, currentY = this.data.getStartBalloon().y, currentZ = 0;
 		
@@ -79,15 +85,16 @@ public class ProblemNaive2 extends Problem {
 		
 		while(true) {
 			
-			if(currentY < 0 || currentY >= data.getnY()) {
-				return false;
-			}
+			float Zratio = 0.75f;
 			
 			//Compute with current 
 			int dCurr = 0;
 			Coord2 cZcurr = computeCoord(currentX, currentY, currentZ);
-			if(cZcurr != null)
+			if(cZcurr != null) {
 				dCurr = getDistance(cZcurr, target);
+				if(z == currentZ)
+					dCurr *= Zratio;
+			}
 			else
 				dCurr = Integer.MAX_VALUE;
 			
@@ -97,8 +104,11 @@ public class ProblemNaive2 extends Problem {
 				dUp = Integer.MAX_VALUE;
 			else {
 				cZup = computeCoord(currentX, currentY, currentZ+1);
-				if(cZup != null)
+				if(cZup != null) {
 					dUp = getDistance(cZup, target);
+					if(z > currentZ)
+						dUp *= Zratio;	
+				}
 				else
 					dUp = Integer.MAX_VALUE;
 			}
@@ -110,30 +120,47 @@ public class ProblemNaive2 extends Problem {
 				dDown = Integer.MAX_VALUE;
 			else {
 				cZdown = computeCoord(currentX, currentY, currentZ-1);
-				if(cZdown != null)
+				if(cZdown != null) {
 					dDown = getDistance(cZdown, target);
+					if(z < currentZ)
+						dDown *= Zratio;		
+				}
 				else
 					dDown = Integer.MAX_VALUE;
 			}
 			
 			//best z
-			if(dCurr <= dUp && dCurr <= dDown) {
+			if(cZcurr != null && dCurr <= dUp && dCurr <= dDown) {
 				currentX = 	cZcurr.x;
 				currentY = cZcurr.y;
+				path.add(new Integer(0));
 			}
-			else if(dUp < dDown) {
+			else if(cZup != null && dUp < dDown) {
 				currentX = 	cZup.x;
 				currentY = cZup.y;
+				currentZ += 1;
+				path.add(new Integer(1));
 			}
-			else {
+			else if(cZdown != null) {
 				currentX = 	cZdown.x;
 				currentY = cZdown.y;
+				currentZ -= 1;
+				path.add(new Integer(-1));
+			}
+			else {
+				return null;
 			}
 			
 			nTurn++;
 			
 			if(nTurn >= this.data.getNbTurn())
-				return true;
+				return null;
+			
+			if(currentX == x && currentY == y && currentZ == z) {
+				return path;
+			}
+			
+			
 		}
 	}
 

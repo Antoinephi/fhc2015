@@ -25,9 +25,9 @@ public class ProblemData {
 	}
 
 	public void setAreaDimension(int nX, int nY, int nZ) {
-		this.nX = nX;
-		this.nY = nY;
-		this.nZ = nZ;
+		this.setnX(nX);
+		this.setnY(nY);
+		this.setnZ(nZ);
 		
 		windsVectors = new Coord2[nX][nY][nZ];
 	}
@@ -80,6 +80,30 @@ public class ProblemData {
 
 	public void setCoverageRadius(int coverageRadius) {
 		this.coverageRadius = coverageRadius;
+	}
+
+	public int getnX() {
+		return nX;
+	}
+
+	public void setnX(int nX) {
+		this.nX = nX;
+	}
+
+	public int getnY() {
+		return nY;
+	}
+
+	public void setnY(int nY) {
+		this.nY = nY;
+	}
+
+	public int getnZ() {
+		return nZ;
+	}
+
+	public void setnZ(int nZ) {
+		this.nZ = nZ;
 	}	
 
 }

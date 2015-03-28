@@ -12,7 +12,11 @@ public class Main {
 		
 		problem.resolve();
 		
-		problem.output("data/out");
+		System.out.println("phase 2");
+		
+		Problem problem2 = new ProblemNaive3(data);
+		
+		problem2.output("data/out");
 	}
 
 }

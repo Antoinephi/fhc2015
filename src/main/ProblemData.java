@@ -41,6 +41,10 @@ public class ProblemData {
 		return this.nbBalloon;
 	}
 	
+	public boolean isTarget(int u, int j){
+		
+	}
+	
 	public int getNbTurn() {
 		return this.nbTurn;
 	}

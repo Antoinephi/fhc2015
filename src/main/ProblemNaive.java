@@ -6,30 +6,56 @@ public class ProblemNaive extends Problem {
 		super(data);
 	}
 
-	public int columnDist(int y, int v) {
-		return Math.abs(y - v);
+	public int columnDist(int x, int u) {
+		return Math.min(Math.abs(x - u), Math.abs((x + this.data.getnX()) - u));
 	}
 	
+	/**
+	 * Return coverage score for the case (x, y)
+	 */
 	public int getScoreBalloon(int x, int y) {
 		int score = 0;
-		/*// (x - u)^2 + (columndist(y, v))^2 < V^2 => score + 1
-		for(int j = y - this.data.getCoverageRadius(); j <= y + V; j++) {
-			for(int i = x - (this.data.getCoverageRadius() - columnDist(y, j);
-					i <= x + (this.data.getCoverageRadius() - columnDist(y, j)); i++) {
-				if(data.isTarget(i,j))
+		
+		// If the balloon is not in the map
+		if(x >= this.data.getnY() || y < 0)
+			return -1;
+		
+		// (x - u)^2 + (columndist(y, v))^2 < V^2 => score + 1
+		for(int i = x - this.data.getCoverageRadius(); i <= x + this.data.getCoverageRadius(); i++) {
+			for(int j = y - (this.data.getCoverageRadius() - columnDist(x, i));
+					j <= y + (this.data.getCoverageRadius() - columnDist(x, i)); j++) {
+				if(this.data.isTarget(i,j))
 					score++;
 			}
-		}*/
+		}
 		return score;
 	}
 	
 	public int nextTurnResult(int x, int y, int z, int altitudeDeviation) {
 		
-		return 0;
+		if(z + altitudeDeviation <= 0 || z + altitudeDeviation >= 8)
+			return -1;
+		
+		Coord2 windVector = this.data.getWindVector(x, y, z);
+		return getScoreBalloon(x + windVector.x, y + windVector.y);
 	}
-
+	
 	public void resolve() {
-
+	/*	for(int t = 0; t < this.data.getNbTurn(); t++) {
+			for(int b = 0; b < this.data.getNbBalloon(); b++) {
+				int bestAltitude = 0;
+				int bestAltitudeValue = 0;
+				for(int i = -1; i <= 1; i++) {
+					if(nextTurnResult(this.data.getBalloonsCoord(i)) > bestAltitudeValue) {
+						bestAltitude = i;
+						bestAltitudeValue = nextTurnResult(this.data.getBalloonsCoord(i));
+					}
+					this.data.setAltitudeChanges(t, b, bestAltitude);
+					this.data.setBalloonsCoord(b, 
+							this.data.newBalloonCoord(this.data.getBalloonsCoord(i), bestAltitude));
+				}
+			}
+		}*/
 	}
 
 }

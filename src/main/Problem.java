@@ -8,7 +8,7 @@ public abstract class Problem {
 	
 	protected ProblemData data;
 	
-	/* solution build by problem */
+	/* solution build by problem [T] : [B] */
 	protected int [][] move;
 	
 	public Problem(ProblemData data) {

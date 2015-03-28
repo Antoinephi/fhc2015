@@ -164,5 +164,27 @@ public class ProblemData {
 		}
 		return -1;
 	}
+	
+	public int columnDist(int x, int u) {
+		return Math.min(Math.abs(x - u), Math.abs((x + getnX()) - u));
+	}
+
+	public int getScoreBalloon(int x, int y) {
+		int score = 0;
+		
+		// If the balloon is not in the map
+		if(x >= getnY() || y < 0)
+			return -1;
+		
+		// (x - u)^2 + (columndist(y, v))^2 < V^2 => score + 1
+		for(int i = x - this.coverageRadius ; i <= x + this.coverageRadius ; i++) {
+			for(int j = y - (getCoverageRadius() - columnDist(x, i));
+					j <= y + (getCoverageRadius() - columnDist(x, i)); j++) {
+				if(isTarget(i,j))
+					score++;
+			}
+		}
+		return score;
+	}
 
 }

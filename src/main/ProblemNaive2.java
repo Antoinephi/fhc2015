@@ -15,7 +15,6 @@ public class ProblemNaive2 extends Problem {
 	public void resolve() {
 		System.out.println("Launch problem naive 2");
 		
-		System.out.println(">"+hasCycle(0, 0, 0));
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(new File("data/scoreList"));
@@ -34,10 +33,13 @@ public class ProblemNaive2 extends Problem {
 					List<Integer> path;
 					if((path = findPathTo(i, j, k)) != null) {
 						int score = computePathScore(i, j, k, data.getNbTurn()-path.size());
-						System.out.println(score);
-						writer.println(i+" "+j+" "+k+" "+score);
+						int score2 = getScorePath(path);
+						System.out.println(score2+" + "+score);
+						writer.println(i+" "+j+" "+k+" "+score+score2);
+
 						n++;
 					}
+					
 					/*int score;
 					if((score = computePathScore(i, j, k)) != 0) {
 						
@@ -53,10 +55,27 @@ public class ProblemNaive2 extends Problem {
 		writer.close();
 	}
 
+	
+	public int getScorePath(List<Integer> paths) {
+		int score = 0, currentZ = -1;
+		Coord2 nextCoord = new Coord2(this.data.getStartBalloon().x, this.data.getStartBalloon().y );
+		for (Integer move : paths) {
+			currentZ += move.intValue();
+			nextCoord = computeCoord(nextCoord.x, nextCoord.y, currentZ);
+			if (nextCoord != null)
+				score += getScoreBalloon(nextCoord.x, nextCoord.y);
+		}
+		return score;
+	}
+	
+	
+/*
 	public boolean hasCycle(int x, int y, int z) {
 		int currentX = x, currentY = y, currentZ = z;
 		
 		int nTurn = 0;
+		
+		int score = 0;
 		
 		while(true) {
 			
@@ -71,6 +90,7 @@ public class ProblemNaive2 extends Problem {
 			if(currentX < 0) {
 				currentX = data.getnX()+currentX;
 			}
+			
 			else if(currentX >= data.getnX()) {
 				currentX = currentX-data.getnX();
 			}
@@ -79,23 +99,34 @@ public class ProblemNaive2 extends Problem {
 			
 			currentY += data.getWindVector(currentX, currentY, currentZ).y;
 			
+			score += this.data.getScoreBalloon(currentX,currentY)!=-1?this.data.getScoreBalloon(currentX,currentY):0;
+					 
 			if(currentX == x && currentY == y && currentZ == z) {
+				if (score > 0)
+					System.out.println(score+" in "+nTurn+ " turns");
 				return true;
 			}
 			
 			nTurn++;
 			
-			if(nTurn >= this.data.getNbTurn())
+			if(nTurn >= this.data.getNbTurn()) {
+				if (score > 0)
+					System.out.println(score+" in "+nTurn+ " turns");
 				return true;
+			}
 		}
 	}
-	
+	*/
 	
 	public List<Integer> findPathTo(int x, int y, int z) {
 		
 		List<Integer> path = new ArrayList<Integer>();
 		
-		int currentX = this.data.getStartBalloon().x, currentY = this.data.getStartBalloon().y, currentZ = 0;
+		path.add(new Integer(1));
+
+		Coord2 beg = this.computeCoord(this.data.getStartBalloon().x, this.data.getStartBalloon().y, 0);
+		
+		int currentX =  beg.x, currentY =  beg.y, currentZ = 0;
 		
 		int nTurn = 0;
 		

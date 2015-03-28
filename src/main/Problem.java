@@ -25,8 +25,6 @@ public abstract class Problem {
 		 * OUTPUT HERE
 		 */
 		System.out.println("OUTPUT");
-		System.out.println(this.data.getNbTurn());
-		System.out.println(this.data.getNbBalloon());
 		for (int t = 0 ; t < this.data.getNbTurn() ; t++) {
 			for (int i = 0 ; i  < this.data.getNbBalloon() ; i++) {
 				writer.print(this.move[t][i]+" ");

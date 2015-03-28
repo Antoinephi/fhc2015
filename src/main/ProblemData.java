@@ -105,5 +105,9 @@ public class ProblemData {
 	public void setnZ(int nZ) {
 		this.nZ = nZ;
 	}	
+	
+	public Coord2 getStartBalloon() {
+		return this.startBalloon;
+	}
 
 }

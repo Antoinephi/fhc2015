@@ -36,5 +36,13 @@ public class ProblemData {
 	}
 	
 	public void addTargetCase()
+	
+	public int getNbBalloon() {
+		return this.nbBalloon;
+	}
+	
+	public int getNbTurn() {
+		return this.nbTurn;
+	}
 
 }

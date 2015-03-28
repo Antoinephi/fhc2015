@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 
 public abstract class Problem {
 	
-	private ProblemData data;
+	protected ProblemData data;
 	
 	public Problem(ProblemData data) {
 		this.data = data;

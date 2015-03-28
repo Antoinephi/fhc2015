@@ -12,6 +12,12 @@ public class Input {
 		
 		BufferedReader reader = new BufferedReader(new FileReader(pathname));
 		
+		/*
+		 * INPUT HERE
+		 */
+		
+		reader.close();
+		
 		return data;
 	}
 

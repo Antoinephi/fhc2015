@@ -1,6 +1,7 @@
 package main;
 
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProblemData {
 	
@@ -12,11 +13,21 @@ public class ProblemData {
 	private int coverageRadius;
 	private int nbBalloon;
 	private int nbTurn;
+	
+	private List<Coord2> targetsCase;
+	
+	private Coord2[][][] windsVectors;
+	
+	public ProblemData() {
+		targetsCase = new ArrayList<Coord2>();
+	}
 
 	public void setAreaDimension(int nX, int nY, int nZ) {
 		this.nX = nX;
 		this.nY = nY;
 		this.nZ = nZ;
+		
+		windsVectors = new Coord2[nX][nY][nZ];
 	}
 
 	public void setNbTarget(int nbTarget) {
@@ -35,6 +46,12 @@ public class ProblemData {
 		this.nbTurn = nbTurn;
 	}
 	
-	public void addTargetCase()
+	public void addTargetCase(Coord2 coord) {
+		targetsCase.add(coord);
+	}
+	
+	public void addWindVector(int x, int y, int z, Coord2 vector) {
+		windsVectors[x][y][z] = vector;
+	}
 
 }

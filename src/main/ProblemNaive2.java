@@ -22,17 +22,9 @@ public class ProblemNaive2 extends Problem {
 				for(int j=0; j<data.getnY(); j++) {
 					List<Integer> path;
 					if((path = findPathTo(i, j, k)) != null) {
-						System.out.println(computePathScore(i, j, k, data.getNbTurn()-path.size()));
-						//System.out.println(getScorePath(path));
+						System.out.println(getScorePath(path) + " : "+ computePathScore(i, j, k, data.getNbTurn()-path.size()));
 						n++;
 					}
-					
-					/*int score;
-					if((score = computePathScore(i, j, k)) != 0) {
-						
-						
-						
-					}*/
 				}
 			}
 			
@@ -43,7 +35,7 @@ public class ProblemNaive2 extends Problem {
 	
 	public int getScorePath(List<Integer> paths) {
 		int score = 0, currentZ = -1;
-		Coord2 nextCoord = new Coord2(0,0);
+		Coord2 nextCoord = new Coord2(this.data.getStartBalloon().x,this.data.getStartBalloon().y);
 		for (Integer move : paths) {
 			currentZ += move.intValue();
 			nextCoord = computeCoord(nextCoord.x, nextCoord.y, currentZ);

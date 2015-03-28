@@ -1,7 +1,9 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProblemData {
 	
@@ -24,14 +26,13 @@ public class ProblemData {
 	
 	private Coord2 startBalloon;
 	
+	private Map<Integer, Boolean> targetCovered;
+	
 	public ProblemData() {
 		targetsCase = new ArrayList<Coord2>();
-		this.balloonsCoord = new Coord3[nbBalloon];
-		this.altitudeChanges = new int[nbTurn][nbBalloon];
-		for(int i = 0; i < balloonsCoord.length; i++){
-			this.balloonsCoord[i].x = this.startBalloon.x;
-			this.balloonsCoord[i].y = this.startBalloon.y;
-			this.balloonsCoord[i].z = 0;
+		targetCovered = new LinkedHashMap<Integer, Boolean>();
+		for(int i = 0; i < nbTarget; i++) {
+			targetCovered.put(i, false);
 		}
 	}
 
@@ -54,13 +55,22 @@ public class ProblemData {
 	public void setNbBalloon(int nbBalloon) {
 		this.nbBalloon = nbBalloon;
 	}
-
+	
 	public void setNbTurn(int nbTurn) {
 		this.nbTurn = nbTurn;
 	}
 	
 	public void setStartBalloon(Coord2 coord) {
 		this.startBalloon = coord;
+	}
+	
+	public void initBalloonsCoord() {
+		this.balloonsCoord = new Coord3[nbBalloon];
+		this.altitudeChanges = new int[nbTurn][nbBalloon];
+		for(int i = 0; i < nbBalloon; i++){
+			this.balloonsCoord[i] = new Coord3(this.startBalloon.x, 
+					this.startBalloon.y, -1);
+		}
 	}
 	
 	public void addTargetCase(Coord2 coord) {
@@ -125,17 +135,17 @@ public class ProblemData {
 		this.altitudeChanges[i][j] = direction;
 	}
 
-	public Coord2 getBalloonsCoord(int i) {
+	public Coord3 getBalloonsCoord(int i) {
 		return balloonsCoord[i];
 	}
 
-	public void setBalloonsCoord(int i , Coord2 coo) {
+	public void setBalloonsCoord(int i , Coord3 coo) {
 		this.balloonsCoord[i] = coo;
 	}	
 	
-	public Coord3 newBallonCoord(Coord3 balloonCoord, int altitude) {
-		Coord2 windVector = this.getWindVector(balloonCoord.x, balloonCoord.y, altitude);
-		return new Coord3(balloonCoord.x + windVector.x, balloonCoord.y + windVector.y, balloonCoord.z + altitude);
+	public Coord3 newBalloonCoord(Coord3 balloonCoord, int altitude) {
+		Coord2 windVector = this.getWindVector(balloonCoord.x, balloonCoord.y, balloonCoord.z + altitude);
+		return new Coord3((balloonCoord.x + windVector.x) % this.nX, balloonCoord.y + windVector.y, balloonCoord.z + altitude);
 	}
 
 }

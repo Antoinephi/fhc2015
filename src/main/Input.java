@@ -47,10 +47,12 @@ public class Input {
 		sc = new Scanner(currentLine);
 		int startBallonY = sc.nextInt();
 		int startBallonX = sc.nextInt();
+
+		sc.close();
 		
 		data.setStartBalloon(new Coord2(startBallonX, startBallonY));
+		data.initBalloonsCoord();
 		
-		sc.close();
 		
 		for(int i=0; i<nbTarget; i++) {
 			currentLine = reader.readLine();

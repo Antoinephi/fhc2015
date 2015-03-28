@@ -21,6 +21,8 @@ public abstract class Problem {
 	public void output(String pathname) throws FileNotFoundException {
 		PrintWriter writer = new PrintWriter(new File(pathname));
 		
+		System.out.println("Start Write output...");
+		
 		/*
 		 * OUTPUT HERE
 		 */

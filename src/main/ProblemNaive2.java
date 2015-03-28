@@ -130,12 +130,13 @@ public class ProblemNaive2 extends Problem {
 				i <= (x + this.data.getCoverageRadius()) % this.data.getnX(); i++) {
 			for(int j = y - (this.data.getCoverageRadius() - columnDist(x, i));
 					j <= y + (this.data.getCoverageRadius() - columnDist(x, i)); j++) {
-				if(this.data.isTarget(i,j))
+				if(this.data.isTarget(i,j) && this.data.isCovered(this.data.getTargetIndex(i, j)) == 0)
 					score++;
 			}
 		}
 		return score;
 	}
+	
 	
 	public int computePathScore(int begX, int begY, int begZ, int maxTurn) {
 		int currentX = begX, currentY = begY, currentZ = begZ;

@@ -159,6 +159,35 @@ public abstract class Problem {
 	public int getDistance(Coord2 c1, Coord2 c2) {
 		return (c1.x-c2.x)*(c1.x-c2.x)+(c1.y-c2.y)*(c1.y-c2.y);
 	}
+
+	public int columnDist(int x, int u) {
+		return Math.min(Math.abs(x - u), Math.abs((x + this.data.getnX()) - u));
+	}
+	
+	public void updateTarget(Coord3 balloonsCoord, Coord3 oldBalloonsCoord) {
+
+		for(int i = oldBalloonsCoord.x - this.data.getCoverageRadius(); i <= oldBalloonsCoord.x + this.data.getCoverageRadius(); i++) {
+			for(int j = oldBalloonsCoord.y - (this.data.getCoverageRadius() - columnDist(oldBalloonsCoord.x, i));
+					j <= oldBalloonsCoord.y + (this.data.getCoverageRadius() - columnDist(oldBalloonsCoord.x, i)); j++) {
+				if(this.data.isTarget(i,j))
+					this.data.setTargetCovered(this.data.getTargetIndex(i, j), 
+							this.data.isCovered(this.data.getTargetIndex(i, j)) - 1);
+			}
+		}
+
+		// If the balloon is not in the map
+		if(balloonsCoord.y >= this.data.getnY() || balloonsCoord.y < 0)
+			return;
+
+		for(int i = balloonsCoord.x - this.data.getCoverageRadius(); i <= balloonsCoord.x + this.data.getCoverageRadius(); i++) {
+			for(int j = balloonsCoord.y - (this.data.getCoverageRadius() - columnDist(balloonsCoord.x, i));
+					j <= balloonsCoord.y + (this.data.getCoverageRadius() - columnDist(balloonsCoord.x, i)); j++) {
+				if(this.data.isTarget(i,j))
+					this.data.setTargetCovered(this.data.getTargetIndex(i, j), 
+							this.data.isCovered(this.data.getTargetIndex(i, j)) + 1);
+			}
+		}
+	}
 	
 
 }

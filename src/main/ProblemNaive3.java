@@ -16,6 +16,35 @@ public class ProblemNaive3 extends Problem {
 		super(data);
 	}
 	
+	public int getBalloonDistance(Coord3 balloon1, Coord3 balloon2) {
+		int distanceX = Math.min(Math.abs(balloon1.x - balloon2.x), Math.abs(balloon1.x + this.data.getnX() - balloon2.x));
+		int distanceY = Math.abs(balloon1.y - balloon2.y);
+		return distanceX + distanceY;
+	}
+	
+	public float commonPercentage(List<Integer> path1, List<Integer> path2) {
+		float percentage = 0;
+		Coord2 windVector;
+		Coord3 balloon1 = new Coord3(this.data.getStartBalloon().x, this.data.getStartBalloon().y, -1);
+		Coord3 balloon2 = new Coord3(this.data.getStartBalloon().x, this.data.getStartBalloon().y, -1);
+		
+		for(int i = 0; i < Math.min(path1.size(), path2.size()); i++) {
+			if(balloon1.y >= 0 && balloon1.y < this.data.getnY()) {
+				windVector = this.data.getWindVector(balloon1.x, balloon1.y, balloon1.z + path1.get(i));
+				balloon1 = new Coord3((balloon1.x + windVector.x) % this.data.getnX(), balloon1.y + windVector.y, balloon1.z + path1.get(i));
+			}
+			if(balloon2.y >= 0 && balloon2.y < this.data.getnY()) {
+				windVector = this.data.getWindVector(balloon2.x, balloon2.y, balloon2.z + path2.get(i));
+				balloon2 = new Coord3((balloon2.x + windVector.x) % this.data.getnX(), balloon2.y + windVector.y, balloon2.z + path2.get(i));
+			}
+			if(getBalloonDistance(balloon1, balloon2) < this.data.getCoverageRadius()) {
+				percentage++;
+			}
+		}
+		
+		return (percentage/Math.min(path1.size(), path2.size())) * 100;
+	}
+	
 	public void resolve() {
 		
 		//load file
@@ -67,8 +96,16 @@ public class ProblemNaive3 extends Problem {
 		
 		List<List<Integer>> listPath = new ArrayList<List<Integer>>();
 		
+		int decalage = 0;
+		
 		for(int i=0; i<data.getNbBalloon(); i++) {
-			Coord3 c = sortedIndex.get(i);
+			
+			if(i > 0) 
+				while(commonPercentage(findPathTo(sortedIndex.get(i + decalage).x, sortedIndex.get(i + decalage).y, sortedIndex.get(i + decalage).z), 
+						listPath.get(listPath.size()-1)) > 72)
+					decalage = (decalage + 1) % sortedIndex.size();
+					
+			Coord3 c = sortedIndex.get(i + decalage);
 			listPath.add(findPathTo(c.x, c.y, c.z));
 			System.out.println(c.x+" "+c.y+" "+c.z);
 		}

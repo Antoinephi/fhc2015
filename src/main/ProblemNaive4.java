@@ -90,12 +90,17 @@ public class ProblemNaive4 extends Problem {
 		});
 		
 		List<List<Integer>> listPath = new ArrayList<List<Integer>>();
-		
-		for(int i=0; i<data.getNbBalloon(); i += 2) {
-			Coord3 c = sortedIndex.get(i/2);
-			Coord3 c2 = sortedRareIndex.get(i/2);
+		List<List<Integer>> listPath2 = new ArrayList<List<Integer>>();
+		for(int i=0; i<data.getNbBalloon(); i+=2) {
+			Coord3 c = sortedRareIndex.get(i/2);
+			Coord3 c2 = sortedRareIndex.get((i/2+1)%20);
+			/*Coord3 c2 = sortedRareIndex.get((i/4+1));
+			Coord3 c3 = sortedRareIndex.get((i/4+2));
+			Coord3 c4 = sortedRareIndex.get((i/4+3));*/
 			listPath.add(findPathTo(c.x, c.y, c.z));
-			listPath.add(findPathTo(c2.x,c2.y, c2.z));
+			listPath2.add(findPathTo(c2.x,c2.y, c2.z));
+			/*listPath.add(findPathTo(c3.x,c3.y, c3.z));
+			listPath.add(findPathTo(c4.x,c4.y, c4.z));*/
 			System.out.println(c.x+" "+c.y+" "+c.z);
 		}
 		
@@ -103,10 +108,16 @@ public class ProblemNaive4 extends Problem {
 		
 		for(int t=0; t<data.getNbTurn(); t++) {
 			for(int i=0; i<data.getNbBalloon(); i++) {
-				if(t >= listPath.get(i).size() || t-tempo*i < 0)
+				if(t >= listPath.get(i%listPath.size()).size() || t-tempo*i < 0)
 					this.move[t][i] = 0;
 				else
-					this.move[t][i] = listPath.get(i).get(t-tempo*i);
+					this.move[t][i] = listPath.get(i%listPath.size()).get(t-tempo*i);
+				
+				if(t >= listPath2.get(i%listPath2.size()).size() || t-tempo*i < 0)
+					this.move[t][i] = 0;
+				else
+					this.move[t][i] = listPath2.get(i%listPath2.size()).get(t-tempo*i);
+				
 				
 			}
 		}

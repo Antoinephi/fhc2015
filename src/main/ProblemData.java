@@ -18,6 +18,8 @@ public class ProblemData {
 	
 	private Coord2[][][] windsVectors;
 	
+	private Coord2 startBalloon;
+	
 	public ProblemData() {
 		targetsCase = new ArrayList<Coord2>();
 	}
@@ -38,16 +40,16 @@ public class ProblemData {
 		this.nbTarget = nbTarget;
 	}
 
-	public void setCoverageRaius(int coverageRadius) {
-		this.coverageRadius = coverageRadius;
-	}
-
 	public void setNbBalloon(int nbBalloon) {
 		this.nbBalloon = nbBalloon;
 	}
 
 	public void setNbTurn(int nbTurn) {
 		this.nbTurn = nbTurn;
+	}
+	
+	public void setStartBalloon(Coord2 coord) {
+		this.startBalloon = coord;
 	}
 	
 	public void addTargetCase(Coord2 coord) {
@@ -70,5 +72,14 @@ public class ProblemData {
 	public int getNbTurn() {
 		return this.nbTurn;
 	}
-	
+
+
+	public int getCoverageRadius() {
+		return coverageRadius;
+	}
+
+	public void setCoverageRadius(int coverageRadius) {
+		this.coverageRadius = coverageRadius;
+	}	
+
 }

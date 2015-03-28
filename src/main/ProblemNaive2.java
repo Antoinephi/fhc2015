@@ -1,5 +1,8 @@
 package main;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,14 @@ public class ProblemNaive2 extends Problem {
 	public void resolve() {
 		System.out.println("Launch problem naive 2");
 		
-		System.out.println(">"+hasCycle(0, 0, 0));
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(new File("data/scoreList"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		
 		
 		for(int k=0; k<data.getnZ(); k++) {
 		
@@ -20,25 +30,44 @@ public class ProblemNaive2 extends Problem {
 			
 			for(int i=0; i<data.getnX(); i++) {
 				for(int j=0; j<data.getnY(); j++) {
-					if(hasCycle(i, j, k)) {
-						List<Integer> path;
-						if((path = findPathTo(i, j, k)) != null) {
-							//System.out.println(path.size());
-							n++;
-						}
-						
+					List<Integer> path;
+					if((path = findPathTo(i, j, k)) != null) {
+						int score = computePathScore(i, j, k, data.getNbTurn()-path.size());
+						int score2 = getScorePath(path);
+						System.out.println(score2+" + "+score);
+						writer.println(i+" "+j+" "+k+" "+score+score2);
+						n++;
 					}
 				}
 			}
 			
 			System.out.println(k+" => "+n);
 		}
+		
+		writer.close();
 	}
 
+	
+	public int getScorePath(List<Integer> paths) {
+		int score = 0, currentZ = -1;
+		Coord2 nextCoord = new Coord2(this.data.getStartBalloon().x,this.data.getStartBalloon().y);
+		for (Integer move : paths) {
+			currentZ += move.intValue();
+			nextCoord = computeCoord(nextCoord.x, nextCoord.y, currentZ);
+			if (nextCoord != null)
+				score += getScoreBalloon(nextCoord.x, nextCoord.y);
+		}
+		return score;
+	}
+	
+	
+/*
 	public boolean hasCycle(int x, int y, int z) {
 		int currentX = x, currentY = y, currentZ = z;
 		
 		int nTurn = 0;
+		
+		int score = 0;
 		
 		while(true) {
 			
@@ -53,6 +82,7 @@ public class ProblemNaive2 extends Problem {
 			if(currentX < 0) {
 				currentX = data.getnX()+currentX;
 			}
+			
 			else if(currentX >= data.getnX()) {
 				currentX = currentX-data.getnX();
 			}
@@ -61,23 +91,34 @@ public class ProblemNaive2 extends Problem {
 			
 			currentY += data.getWindVector(currentX, currentY, currentZ).y;
 			
+			score += this.data.getScoreBalloon(currentX,currentY)!=-1?this.data.getScoreBalloon(currentX,currentY):0;
+					 
 			if(currentX == x && currentY == y && currentZ == z) {
+				if (score > 0)
+					System.out.println(score+" in "+nTurn+ " turns");
 				return true;
 			}
 			
 			nTurn++;
 			
-			if(nTurn >= this.data.getNbTurn())
+			if(nTurn >= this.data.getNbTurn()) {
+				if (score > 0)
+					System.out.println(score+" in "+nTurn+ " turns");
 				return true;
+			}
 		}
 	}
-	
+	*/
 	
 	public List<Integer> findPathTo(int x, int y, int z) {
 		
 		List<Integer> path = new ArrayList<Integer>();
 		
-		int currentX = this.data.getStartBalloon().x, currentY = this.data.getStartBalloon().y, currentZ = 0;
+		path.add(new Integer(1));
+
+		Coord2 beg = this.computeCoord(this.data.getStartBalloon().x, this.data.getStartBalloon().y, 0);
+		
+		int currentX =  beg.x, currentY =  beg.y, currentZ = 0;
 		
 		int nTurn = 0;
 		
@@ -189,5 +230,63 @@ public class ProblemNaive2 extends Problem {
 		return (c1.x-c2.x)*(c1.x-c2.x)+(c1.y-c2.y)*(c1.y-c2.y);
 	}
 	
+	public int columnDist(int x, int u) {
+		return Math.min(Math.abs(x - u), Math.abs((x + this.data.getnX()) - u));
+	}
+	
+	/**
+	 * Return coverage score for the case (x, y)
+	 */
+	public int getScoreBalloon(int x, int y) {
+		int score = 0;
+		
+		// If the balloon is not in the map
+		if(y >= this.data.getnY() || y < 0)
+			return -1;
+		
+		// (x - u)^2 + (columndist(y, v))^2 < V^2 => score + 1
+		for(int i = (x - this.data.getCoverageRadius()) % this.data.getnX(); 
+				i <= (x + this.data.getCoverageRadius()) % this.data.getnX(); i++) {
+			for(int j = y - (this.data.getCoverageRadius() - columnDist(x, i));
+					j <= y + (this.data.getCoverageRadius() - columnDist(x, i)); j++) {
+				if(this.data.isTarget(i,j))
+					score++;
+			}
+		}
+		return score;
+	}
+	
+	public int computePathScore(int begX, int begY, int begZ, int maxTurn) {
+		int currentX = begX, currentY = begY, currentZ = begZ;
+		
+		int nTurn = 0;
+		int score = 0;
+		
+		while(true) {
+			
+			Coord2 c = computeCoord(currentX, currentY, currentZ);
+			
+			if(c == null)
+				return score;
+			else {
+				currentX = c.x;
+				currentY = c.y;
+			}
+			
+			int i = getScoreBalloon(currentX, currentY);
+			
+			if(i == -1) {
+				System.err.println("WTF");
+				System.exit(0);
+			}
+			
+			score += i;
+			
+			nTurn++;
+			
+			if(nTurn >= maxTurn)
+				return score;
+		}
+	}
 
 }

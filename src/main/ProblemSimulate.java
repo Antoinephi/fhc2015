@@ -38,9 +38,9 @@ public class ProblemSimulate extends Problem {
 		}
 		
 		System.out.println(data.getnX()*data.getnY()*data.getnZ()*data.getNbTurn());
-		dynamicScore = new int[data.getnX()][data.getnY()][data.getnZ()][data.getNbTurn()];
+		dynamicScore = new int[data.getnX()][data.getnY()][data.getnZ()][data.getNbTurn()+1];
 		
-		currentScore = new int[data.getnX()][data.getnY()][data.getNbTurn()];
+		currentScore = new int[data.getnX()][data.getnY()][data.getNbTurn()+1];
 		
 		for(int currentBalloon=0; currentBalloon<data.getNbBalloon(); currentBalloon++) {
 			//reset dynamic arrays
@@ -141,7 +141,7 @@ public class ProblemSimulate extends Problem {
 	
 	public int findBestPath(Coord3 coordinate, int turn) {
 		
-		if(turn >= data.getNbTurn())
+		if(turn >= data.getNbTurn()+1)
 			return 0;
 		
 		if(coordinate.z != -1 && dynamicScore[coordinate.x][coordinate.y][coordinate.z][turn] != -1) {
@@ -259,7 +259,7 @@ public class ProblemSimulate extends Problem {
 	}
 	
 	public void retrieveBestPath(Coord3 coordinate, int turn, List<Integer> list) {
-		if(turn >= data.getNbTurn()-1)
+		if(turn >= data.getNbTurn())
 			return;
 		
 		

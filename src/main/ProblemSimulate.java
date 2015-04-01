@@ -295,6 +295,36 @@ public class ProblemSimulate extends Problem {
 			return;
 
 	}
+	
+	public int[] getBalloonScore() {
+		int[] allScore = new int[data.getNbBalloon()];
+		
+		coverredMap = new boolean[data.getnX()][data.getnY()][data.getNbTurn()];
+		for(int i=0; i<data.getnX(); i++) {
+			for(int j=0; j<data.getnY(); j++) {
+				for(int k=0; k<data.getNbTurn(); k++) {
+					coverredMap[i][j][k] = false;
+				}
+			}
+		}
+		
+		for(int b=0; b<data.getNbBalloon(); b++) {
+			
+			computeScore();
+			
+			Coord3 currentCoord = new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, -1);
+			
+			for(int t=0; t<data.getNbTurn(); t++) {
+				currentCoord = move(currentCoord, move[t][b]);
+				if(currentCoord.z != -1)
+					setCovered(currentCoord, t);
+				
+				
+			}
+
+		}
+		return 0;
+	}
 
 }
 

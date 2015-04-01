@@ -18,6 +18,8 @@ public class ProblemSimulate extends Problem {
 	}
 
 	public void resolve() {
+		
+		int totalScore = 0;
 		//initialize covered map
 		coverredMap = new boolean[data.getnX()][data.getnY()][data.getNbTurn()];
 		for(int i=0; i<data.getnX(); i++) {
@@ -63,7 +65,9 @@ public class ProblemSimulate extends Problem {
 			System.out.println("Launch simulatin for balloon "+(currentBalloon+1)+"/"+data.getNbBalloon());
 			
 			progress = 0;
-			System.out.println("find score : "+findBestPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, -1), 0));
+			int score =findBestPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, -1), 0);
+			totalScore += score;
+			System.out.println("find score : "+score+" / "+totalScore);
 			
 			List<Integer> path = new ArrayList<Integer>();
 			retrieveBestPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, -1), 0, path);
@@ -144,7 +148,7 @@ public class ProblemSimulate extends Problem {
 			return dynamicScore[coordinate.x][coordinate.y][coordinate.z][turn];
 		}
 
-		
+		Coord3 c = null; 
 
 		Coord3 c1 = move(coordinate, 0);
 		int score1 = c1 != null ? findBestPath(c1,  turn+1) : 0;
@@ -159,27 +163,29 @@ public class ProblemSimulate extends Problem {
 		int score = 0;
 		if(score1 > score2 && score1 > score3) {
 			score = score1;
+			c = c1;
 		}
 		else if(score2 > score3) {
 			score = score2;
+			c = c2;
 		}
 		else {
-			score = score3;			
+			score = score3;		
+			c = c3;
 		}
 		
+		int nScore = score+(c != null && c.z != -1 ? currentScore[coordinate.x][coordinate.y][turn] : 0);
+		
 		if(coordinate.z != -1) {
-			dynamicScore[coordinate.x][coordinate.y][coordinate.z][turn] = score+currentScore[coordinate.x][coordinate.y][turn];
-			if(turn < 2)
-				System.out.println(coordinate.x+" "+coordinate.y+" "+coordinate.z+" "+turn);
-			return dynamicScore[coordinate.x][coordinate.y][coordinate.z][turn];
+			dynamicScore[coordinate.x][coordinate.y][coordinate.z][turn] = nScore;
 		}
-		else {
-			System.out.println(score+" "+coordinate.x+" "+coordinate.y+" "+turn);
-			return score+currentScore[coordinate.x][coordinate.y][turn];
-		}
+		return nScore;
 	}
 	
 	public Coord3 move(Coord3 coordinate, int altitudeChange) {
+		
+		if(coordinate.z == -1 && altitudeChange == 0)
+			return new Coord3(coordinate.x, coordinate.y, coordinate.z);
 		
 		int z = coordinate.z+altitudeChange;
 		
@@ -232,7 +238,7 @@ public class ProblemSimulate extends Problem {
 			int cX = oRingCompute(coordinate.x+x);
 			for(int y = -data.getCoverageRadius(); y < data.getCoverageRadius(); y++) {
 				int cY = coordinate.y+y;
-				if(y >= 0 && y < data.getnY()) {
+				if(cY >= 0 && cY < data.getnY()) {
 					if(x*x+y*y <= data.getCoverageRadius()*data.getCoverageRadius()) {
 						coverredMap[cX][cY][turn] = true;
 					}
@@ -256,16 +262,21 @@ public class ProblemSimulate extends Problem {
 		if(turn >= data.getNbTurn()-1)
 			return;
 		
+		
 		Coord3 c1 = move(coordinate, 0);
-		int score1 = c1 != null ? dynamicScore[c1.x][c1.y][c1.z][turn+1] : -1;
+		int score1 = c1 != null && c1.z != -1 ? dynamicScore[c1.x][c1.y][c1.z][turn+1] : -1;
 		
 		Coord3 c2 = move(coordinate, -1);
-		int score2 = c2 != null ? dynamicScore[c2.x][c2.y][c2.z][turn+1] : -1;
+		int score2 = c2 != null && c2.z != -1 ? dynamicScore[c2.x][c2.y][c2.z][turn+1] : -1;
 		
 		Coord3 c3 = move(coordinate, 1);
-		int score3 = c3 != null ? dynamicScore[c3.x][c3.y][c3.z][turn+1] : -1;
-
-		if(score1 > score2 && score1 > score3) {
+		int score3 = c3 != null && c3.z != -1 ? dynamicScore[c3.x][c3.y][c3.z][turn+1] : -1;
+		
+		if(score1 == -1 &&  score2 == -1 && score3 == -1) {
+			list.add(new Integer(0));
+			retrieveBestPath(coordinate, turn+1, list);
+		}
+		else if(score1 > score2 && score1 > score3) {
 			list.add(new Integer(0));
 			setCovered(c1, turn);
 			retrieveBestPath(c1, turn+1, list);

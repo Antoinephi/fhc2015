@@ -60,7 +60,7 @@ public class ProblemSimulate extends Problem {
 			
 			//buildBestPath(0);
 			
-			System.out.println("Launch simulatin for balloon "+(currentBalloon+1)+"/"+data.getNbBalloon());
+			System.out.println("Launch simulation for balloon "+(currentBalloon+1)+"/"+data.getNbBalloon());
 			
 			progress = 0;
 			System.out.println("find score : "+findBestPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, -1), 0));

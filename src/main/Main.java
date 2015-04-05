@@ -8,11 +8,16 @@ public class Main {
 		
 		ProblemData data = Input.parse("data/in");
 		
-		Problem problem = new ProblemSimulate(data);
+		Problem problem = new ProblemSimulatePass2(data, "data/pass1");
 		
 		problem.resolve();
 		
-		problem.output("data/out");
+		problem.output("data/pass2");
+		/*
+		Problem problemOpti = new ProblemSimulateOpti(data, "data/out");
+		
+		problemOpti.resolve();
+		*/
 	}
 
 }

@@ -48,9 +48,8 @@ public class ProblemSimulatePass2 extends ProblemSimulate {
 				System.out.println("Total : "+scores);
 				
 				if(scores > bestScore) {
-					System.out.println("saved!");
 					try {
-						output("data/outPass2");
+						output("data/pass2");
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}

@@ -2,6 +2,7 @@ package main;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProblemSimulatePass3 extends ProblemSimulate {
@@ -19,115 +20,70 @@ public class ProblemSimulatePass3 extends ProblemSimulate {
 		
 		int bestScore = scoreChecking();
 		System.out.println("actually : "+bestScore);
+		
+		int moveSave[][] = new int[data.getNbTurn()][data.getNbBalloon()];
 		while(true) {
 			
-			for(int currentBalloon=0; currentBalloon<data.getNbBalloon(); currentBalloon++) {
+			for(int b1=0; b1<data.getNbBalloon(); b1++) {
+				
+				for(int b2=0; b2<data.getNbBalloon(); b2++) {
+					
+					if(b1 == b2)
+						continue;
 	
-				System.out.println("Launch simulation for balloon "+(currentBalloon+1)+"/"+data.getNbBalloon());
-	
-				resetWithoutBalloon(currentBalloon);
-				
-				computeCellScore();
-				resetDynamicCopmpute();
-				
-				
-				int score = computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
-
-				System.out.println("find score : "+score);
-	
-				List<Integer> path = new ArrayList<Integer>();
-				backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path);
-				System.out.println("path length : "+path.size());
-	
-				for(int i=0; i<data.getNbTurn(); i++) {
-					this.move[i][currentBalloon] = i < path.size() ? path.get(i) : 0;
-				}
-				
-				int scores = scoreChecking();
-				System.out.println("Total : "+scores);
-				
-				if(scores > bestScore) {
-					System.out.println("saved!");
-					try {
-						output("data/outPass2");
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
+					System.out.println("Launch simulation for balloons "+(b1+1)+";"+(b2+1));
+					
+					copySolution(moveSave, move);
+		
+					resetWithoutBalloons(b1, b2);
+					
+					computeCellScore();
+					resetDynamicCopmpute();
+					computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
+					List<Integer> path1 = new ArrayList<Integer>();
+					backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path1);
+					
+					computeCellScore();
+					resetDynamicCopmpute();
+					computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
+					List<Integer> path2 = new ArrayList<Integer>();
+					backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path2);
+					
+					for(int i=0; i<data.getNbTurn(); i++) {
+						this.move[i][b1] = i < path1.size() ? path1.get(i) : 0;
+						this.move[i][b2] = i < path2.size() ? path2.get(i) : 0;
 					}
-					bestScore = scores;
+					
+					int scores = scoreChecking();
+					System.out.println("Total : "+scores);
+					
+					
+					if(scores > bestScore) {
+						try {
+							output("data/pass3");
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						}
+						bestScore = scores;
+					}
+					else {
+						copySolution(move, moveSave);
+					}
 				}
 			}
 		}
 		
 	}
-	
-	public int compute2BallonPath(Coord3 coordinates1, Coord3 coordinates2, int turn) {
-		
-		if(turn == data.getNbTurn())
-			return 0;
-		/*else if(turn == data.getNbTurn()) {
-			if(coordinates != null) {
-				dynamicPath[coordinates.x][coordinates.y][coordinates.z][turn] = 0;
-				dynamicScore[coordinates.x][coordinates.y][coordinates.z][turn] = currentScore[coordinates.x][coordinates.y][turn];
+
+	private void copySolution(int[][] tabDest, int[][] tabSrc) {
+		for(int t=0; t<data.getNbTurn(); t++) {
+			for(int b=0; b<data.getNbBalloon(); b++) {
+				tabDest[t][b] = tabSrc[t][b];
 			}
-			return 0;
-			
-		}*/
-		
-		if(coordinates == null)
-			return 0;
-		
-		if(dynamicScore[coordinates.x][coordinates.y][coordinates.z][turn] != -1) {
-			return dynamicScore[coordinates.x][coordinates.y][coordinates.z][turn];
 		}
-		
-		//change = 0
-		int scoreS = 0;
-		Coord3 coordS = null;
-		coordS = coordinates.z == 0 ? coordinates : destinationCell[coordinates.x][coordinates.y][coordinates.z];
-		scoreS = computeBallonPath(coordS, turn+1)+(coordS != null && coordinates.z > 0 ? currentScore[coordS.x][coordS.y][turn] : 0);
-		
-		//change = -1
-		
-		int scoreD = 0;
-		Coord3 coordD = null;
-		if(coordinates.z > 1) {
-			coordD = destinationCell[coordinates.x][coordinates.y][coordinates.z-1];
-			scoreD = computeBallonPath(coordD, turn+1)+(coordD != null ? currentScore[coordD.x][coordD.y][turn] : 0);
-		}
-		
-		// change +1
-		int scoreU = 0;
-		Coord3 coordU = null;
-		if(coordinates.z < data.getnZ()) {
-			coordU = destinationCell[coordinates.x][coordinates.y][coordinates.z+1];
-			scoreU = computeBallonPath(coordU, turn+1)+(coordU != null ? currentScore[coordU.x][coordU.y][turn] : 0);
-		}
-		
-		Coord3 coordWin = null;
-		int scoreWin = 0;
-		if(scoreS > scoreD && scoreS > scoreU || scoreD > scoreU && scoreS == scoreD && tieBreak.nextBoolean() || scoreD < scoreU && scoreS == scoreU && tieBreak.nextBoolean()) {
-			scoreWin = scoreS;
-			coordWin = coordS;
-			dynamicPath[coordinates.x][coordinates.y][coordinates.z][turn] = 0;
-			
-		}
-		else if(scoreD > scoreU || scoreD == scoreU && tieBreak.nextBoolean()) {
-			scoreWin = scoreD;
-			coordWin = coordD;		
-			dynamicPath[coordinates.x][coordinates.y][coordinates.z][turn] = -1;
-		}
-		else {
-			scoreWin = scoreU;
-			coordWin = coordU;
-			dynamicPath[coordinates.x][coordinates.y][coordinates.z][turn] = 1;
-		}
-		
-		dynamicScore[coordinates.x][coordinates.y][coordinates.z][turn] = scoreWin;
-		
-		return scoreWin;
 	}
 
-	private void resetWithoutBalloon(int currentBalloon) {
+	private void resetWithoutBalloons(int b1, int b2) {
 		resetCover();
 		
 		Coord3[] coordinates = new Coord3[data.getNbBalloon()];
@@ -141,7 +97,7 @@ public class ProblemSimulatePass3 extends ProblemSimulate {
 			
 			for(int b=0; b<data.getNbBalloon(); b++) {
 				
-				if(b == currentBalloon)
+				if(b == b1 || b == b2)
 					continue;
 				
 				if(coordinates[b] == null)

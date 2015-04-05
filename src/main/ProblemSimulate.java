@@ -162,14 +162,14 @@ public abstract class ProblemSimulate extends Problem {
 		}
 		
 		//change = 0
-		int scoreS = 0;
+		int scoreS = -1;
 		Coord3 coordS = null;
 		coordS = coordinates.z == 0 ? coordinates : destinationCell[coordinates.x][coordinates.y][coordinates.z];
 		scoreS = computeBallonPath(coordS, turn+1)+(coordS != null && coordinates.z > 0 ? currentScore[coordS.x][coordS.y][turn] : 0);
 		
 		//change = -1
 		
-		int scoreD = 0;
+		int scoreD = -1;
 		Coord3 coordD = null;
 		if(coordinates.z > 1) {
 			coordD = destinationCell[coordinates.x][coordinates.y][coordinates.z-1];
@@ -177,7 +177,7 @@ public abstract class ProblemSimulate extends Problem {
 		}
 		
 		// change +1
-		int scoreU = 0;
+		int scoreU = -1;
 		Coord3 coordU = null;
 		if(coordinates.z < data.getnZ()) {
 			coordU = destinationCell[coordinates.x][coordinates.y][coordinates.z+1];
@@ -291,6 +291,15 @@ public abstract class ProblemSimulate extends Problem {
 				
 				if(coordinates[b] == null)
 					continue;
+				
+				if(coordinates[b].z == 1 && move[t][b] == -1) {
+					System.out.println("Error go too low.");
+					System.exit(0);
+				}
+				else if(coordinates[b].z == 8 && move[t][b] == 1) {
+					System.out.println("Error go too high.");
+					System.exit(0);
+				}
 
 				int newZ = coordinates[b].z+move[t][b];
 				

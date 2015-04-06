@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class ProblemSimulatePass3 extends ProblemSimulate {
 	private String previousOut;
@@ -22,92 +23,93 @@ public class ProblemSimulatePass3 extends ProblemSimulate {
 		System.out.println("actually : "+bestScore);
 		
 		int moveSave[][] = new int[data.getNbTurn()][data.getNbBalloon()];
+		
+		Random r = new Random(0xB00B5);
+		
 		while(true) {
 			
-			for(int b1=0; b1<data.getNbBalloon(); b1++) {
-				
-				for(int b2=0; b2<data.getNbBalloon(); b2++) {
+			int b1 = r.nextInt(data.getNbBalloon());
+			int b2 = r.nextInt(data.getNbBalloon());			
 					
-					if(b1 == b2)
-						continue;
-	
-					System.out.println("Launch simulation for balloons "+(b1+1)+";"+(b2+1));
-					
-					copySolution(moveSave, move);
-		
-					resetWithoutBalloons(b1, b2);
+			if(b1 == b2)
+				continue;
 
-					computeCellScore();
-					resetDynamicCopmpute();
-					computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
-					List<Integer> path1 = new ArrayList<Integer>();
-					backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path1);
-					
-					computeCellScore();
-					resetDynamicCopmpute();
-					computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
-					List<Integer> path2 = new ArrayList<Integer>();
-					backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path2);
-					
-					for(int i=0; i<data.getNbTurn(); i++) {
-						this.move[i][b1] = i < path1.size() ? path1.get(i) : 0;
-						this.move[i][b2] = i < path2.size() ? path2.get(i) : 0;
-					}
-					
-					int scores = scoreChecking();
+			System.out.println("Launch simulation for balloons "+(b1+1)+";"+(b2+1));
+
+			copySolution(moveSave, move);
+
+			resetWithoutBalloons(b1, b2);
+
+			computeCellScore();
+			resetDynamicCopmpute();
+			computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
+			List<Integer> path1 = new ArrayList<Integer>();
+			backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path1);
+
+			computeCellScore();
+			resetDynamicCopmpute();
+			computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
+			List<Integer> path2 = new ArrayList<Integer>();
+			backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path2);
+
+			for(int i=0; i<data.getNbTurn(); i++) {
+				this.move[i][b1] = i < path1.size() ? path1.get(i) : 0;
+				this.move[i][b2] = i < path2.size() ? path2.get(i) : 0;
+			}
+
+			int scores = scoreChecking();
+			System.out.println("Total : "+scores);
+
+			while(true) {
+				resetWithoutBalloons(b1, -1);
+
+				computeCellScore();
+				resetDynamicCopmpute();
+				computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
+				List<Integer> path = new ArrayList<Integer>();
+				backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path);
+
+				for(int i=0; i<data.getNbTurn(); i++) {
+					this.move[i][b1] = i < path.size() ? path.get(i) : 0;
+				}
+
+				resetWithoutBalloons(b2, -1);
+
+				computeCellScore();
+				resetDynamicCopmpute();
+				computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
+				path = new ArrayList<Integer>();
+				backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path);
+
+				for(int i=0; i<data.getNbTurn(); i++) {
+					this.move[i][b2] = i < path.size() ? path.get(i) : 0;
+				}
+
+				int nScore = scoreChecking();
+
+				if(nScore > scores) {
+					scores = nScore;
 					System.out.println("Total : "+scores);
-					
-					while(true) {
-						resetWithoutBalloons(b1, -1);
-
-						computeCellScore();
-						resetDynamicCopmpute();
-						computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
-						List<Integer> path = new ArrayList<Integer>();
-						backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path);
-						
-						for(int i=0; i<data.getNbTurn(); i++) {
-							this.move[i][b1] = i < path.size() ? path.get(i) : 0;
-						}
-						
-						resetWithoutBalloons(b2, -1);
-						
-						computeCellScore();
-						resetDynamicCopmpute();
-						computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
-						path = new ArrayList<Integer>();
-						backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path);
-						
-						for(int i=0; i<data.getNbTurn(); i++) {
-							this.move[i][b2] = i < path.size() ? path.get(i) : 0;
-						}
-						
-						int nScore = scoreChecking();
-						
-						if(nScore > scores) {
-							scores = nScore;
-							System.out.println("Total : "+scores);
-						}
-						else {
-							break;
-						}
-					}
-					
-					
-					if(scores > bestScore) {
-						try {
-							output("data/pass3");
-						} catch (FileNotFoundException e) {
-							e.printStackTrace();
-						}
-						bestScore = scores;
-					}
-					else {
-						copySolution(move, moveSave);
-					}
+				}
+				else {
+					break;
 				}
 			}
+
+
+			if(scores > bestScore) {
+				try {
+					output("data/pass3");
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				bestScore = scores;
+			}
+			else {
+				copySolution(move, moveSave);
+			}
 		}
+
 		
 	}
 

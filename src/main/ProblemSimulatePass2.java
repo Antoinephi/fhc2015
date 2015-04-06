@@ -49,7 +49,7 @@ public class ProblemSimulatePass2 extends ProblemSimulate {
 				
 				if(scores > bestScore) {
 					try {
-						output("data/pass2");
+						output("data/pass2_2");
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}

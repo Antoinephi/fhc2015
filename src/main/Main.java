@@ -8,7 +8,7 @@ public class Main {
 		
 		ProblemData data = Input.parse("data/in");
 		
-		Problem problem = new ProblemSimulatePass3(data, "data/pass2");
+		Problem problem = new ProblemSimulatePass2(data, "data/pass1_2");
 		
 		problem.resolve();
 		

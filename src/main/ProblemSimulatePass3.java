@@ -24,7 +24,7 @@ public class ProblemSimulatePass3 extends ProblemSimulate {
 		
 		int moveSave[][] = new int[data.getNbTurn()][data.getNbBalloon()];
 		
-		Random r = new Random(0xB00B5);
+		Random r = new Random(23);
 		
 		while(true) {
 			

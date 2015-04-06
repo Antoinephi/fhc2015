@@ -36,7 +36,7 @@ public class ProblemSimulatePass3 extends ProblemSimulate {
 					copySolution(moveSave, move);
 		
 					resetWithoutBalloons(b1, b2);
-					
+
 					computeCellScore();
 					resetDynamicCopmpute();
 					computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
@@ -56,6 +56,42 @@ public class ProblemSimulatePass3 extends ProblemSimulate {
 					
 					int scores = scoreChecking();
 					System.out.println("Total : "+scores);
+					
+					while(true) {
+						resetWithoutBalloons(b1, -1);
+
+						computeCellScore();
+						resetDynamicCopmpute();
+						computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
+						List<Integer> path = new ArrayList<Integer>();
+						backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path);
+						
+						for(int i=0; i<data.getNbTurn(); i++) {
+							this.move[i][b1] = i < path.size() ? path.get(i) : 0;
+						}
+						
+						resetWithoutBalloons(b2, -1);
+						
+						computeCellScore();
+						resetDynamicCopmpute();
+						computeBallonPath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0);
+						path = new ArrayList<Integer>();
+						backtracePath(new Coord3(data.getStartBalloon().x, data.getStartBalloon().y, 0), 0, path);
+						
+						for(int i=0; i<data.getNbTurn(); i++) {
+							this.move[i][b2] = i < path.size() ? path.get(i) : 0;
+						}
+						
+						int nScore = scoreChecking();
+						
+						if(nScore > scores) {
+							scores = nScore;
+							System.out.println("Total : "+scores);
+						}
+						else {
+							break;
+						}
+					}
 					
 					
 					if(scores > bestScore) {
